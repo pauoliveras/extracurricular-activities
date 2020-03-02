@@ -1,4 +1,31 @@
 {
+    "behat/behat": {
+        "version": "v3.6.1"
+    },
+    "behat/gherkin": {
+        "version": "v4.6.1"
+    },
+    "behat/symfony2-extension": {
+        "version": "2.1",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "2.1",
+            "ref": "af4f8fa93b1fee9e6f15d1e208ce743bb31cb2b2"
+        },
+        "files": [
+            "behat.yml.dist",
+            "features/bootstrap/FeatureContext.php",
+            "features/bootstrap/bootstrap.php",
+            "features/demo.feature"
+        ]
+    },
+    "behat/transliterator": {
+        "version": "v1.3.0"
+    },
+    "container-interop/container-interop": {
+        "version": "1.2.0"
+    },
     "php": {
         "version": "7.3"
     },
@@ -125,6 +152,22 @@
         ]
     },
     "symfony/service-contracts": {
+        "version": "v2.0.1"
+    },
+    "symfony/translation": {
+        "version": "3.3",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "3.3",
+            "ref": "2ad9d2545bce8ca1a863e50e92141f0b9d87ffcd"
+        },
+        "files": [
+            "config/packages/translation.yaml",
+            "translations/.gitignore"
+        ]
+    },
+    "symfony/translation-contracts": {
         "version": "v2.0.1"
     },
     "symfony/var-dumper": {

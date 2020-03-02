@@ -12,6 +12,7 @@
         "symfony/yaml": "4.4.*"
     },
     "require-dev": {
+        "behat/symfony2-extension": "^2.1"
     },
     "config": {
         "preferred-install": {
