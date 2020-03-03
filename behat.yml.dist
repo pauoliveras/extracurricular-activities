@@ -4,6 +4,7 @@ default:
             contexts:
                 - FeatureContext:
                     kernel: '@kernel'
+                - ActivitatsContext: ~
 
     extensions:
         Behat\Symfony2Extension:

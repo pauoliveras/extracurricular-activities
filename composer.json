@@ -12,7 +12,9 @@
         "symfony/yaml": "4.4.*"
     },
     "require-dev": {
-        "behat/symfony2-extension": "^2.1"
+        "behat/symfony2-extension": "^2.1",
+        "symfony/phpunit-bridge": "^5.0",
+        "symfony/test-pack": "^1.0"
     },
     "config": {
         "preferred-install": {
