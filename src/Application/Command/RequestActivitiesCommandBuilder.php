@@ -39,7 +39,9 @@ class RequestActivitiesCommandBuilder
 
     public function withOption(string $option): self
     {
-        $this->orderedOtions[] = $option;
+        if (!empty($option)) {
+            $this->orderedOtions[] = $option;
+        }
 
         return $this;
     }

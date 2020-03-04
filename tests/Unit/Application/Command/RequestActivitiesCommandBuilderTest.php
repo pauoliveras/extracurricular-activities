@@ -23,4 +23,20 @@ class RequestActivitiesCommandBuilderTest extends TestCase
         $this->assertEquals('group', $command->group());
         $this->assertEquals(['option1', 'option2', 'option3'], $command->orderedOtions());
     }
+
+    public function test_empty_options_are_not_passed_to_command()
+    {
+        $command = (new RequestActivitiesCommandBuilder())->withEmail('test@email.com')
+            ->withCandidateName('candidate name')
+            ->withGroup('group')
+            ->withOption('option1')
+            ->withOption('option2')
+            ->withOption('')
+            ->build();
+
+        $this->assertEquals('test@email.com', $command->email());
+        $this->assertEquals('candidate name', $command->candidateName());
+        $this->assertEquals('group', $command->group());
+        $this->assertEquals(['option1', 'option2'], $command->orderedOtions());
+    }
 }

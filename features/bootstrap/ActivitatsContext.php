@@ -18,6 +18,7 @@ class ActivitatsContext implements Context
     {
         throw new \Behat\Behat\Tester\Exception\PendingException();
     }
+
     /**
      * @Then /^email of email "([^"]*)" ordered requested options are "([^"]*)"$/
      */
@@ -36,24 +37,12 @@ class ActivitatsContext implements Context
             $builder->withEmail($node['email'])
                 ->withCandidateName($node['candidate'])
                 ->withGroup($node['group'])
-                ->withOption($node['option1']);
+                ->withOption($node['option1'])
+                ->withOption($node['option2'])
+                ->withOption($node['option3'])
+                ->withOption($node['option4'])
+                ->withOption($node['option5']);
 
-            if (!empty($node['option2']))
-            {
-                $builder->withOption($node['option2']);
-            }
-            if (!empty($node['option3']))
-            {
-                $builder->withOption($node['option3']);
-            }
-            if (!empty($node['option4']))
-            {
-                $builder->withOption($node['option4']);
-            }
-            if (!empty($node['option5']))
-            {
-                $builder->withOption($node['option5']);
-            }
             $this->requests[] = $builder->build();
         }
     }
