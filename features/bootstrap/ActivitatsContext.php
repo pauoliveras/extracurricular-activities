@@ -3,6 +3,7 @@
 use App\Application\Command\RequestActivitiesCommand;
 use App\Application\Command\RequestActivitiesCommandBuilder;
 use Behat\Behat\Context\Context;
+use Webmozart\Assert\Assert;
 
 class ActivitatsContext implements Context
 {
@@ -10,22 +11,20 @@ class ActivitatsContext implements Context
      * @var array
      */
     private $requests = [];
+    private $requestActivitiesCommandHandler;
+    private $candidateRepository;
 
     /**
-     * @When /^requests are loaded$/
+     * ActivitatsContext constructor.
+     * @param $requestActivitiesCommandHandler
+     * @param $candidateRepository
      */
-    public function requestsAreLoaded()
+    public function __construct($requestActivitiesCommandHandler, $candidateRepository)
     {
-        throw new \Behat\Behat\Tester\Exception\PendingException();
+        $this->requestActivitiesCommandHandler = $requestActivitiesCommandHandler;
+        $this->candidateRepository = $candidateRepository;
     }
 
-    /**
-     * @Then /^email of email "([^"]*)" ordered requested options are "([^"]*)"$/
-     */
-    public function emailOfEmailOrderedRequestedOptionsAre($email, $orderedRequestedActivities)
-    {
-        throw new \Behat\Behat\Tester\Exception\PendingException();
-    }
 
     /**
      * @Given /^a list with the following requests per user$/
@@ -45,6 +44,26 @@ class ActivitatsContext implements Context
 
             $this->requests[] = $builder->build();
         }
+    }
+
+    /**
+     * @When /^requests are loaded$/
+     */
+    public function requestsAreLoaded()
+    {
+        foreach ($this->requests as $request) {
+            $this->requestActivitiesCommandHandler->__invoke($request);
+        }
+    }
+
+    /**
+     * @Then /^email of email "([^"]*)" ordered requested options are "([^"]*)"$/
+     */
+    public function emailOfEmailOrderedRequestedOptionsAre($email, $orderedRequestedActivities)
+    {
+        $candidate = $this->candidateRepository->findByEmail(EmailValueObject::fromString($email));
+
+        Assert::eq($orderedRequestedActivities, $candidate->orderedRequests());
     }
 
 
