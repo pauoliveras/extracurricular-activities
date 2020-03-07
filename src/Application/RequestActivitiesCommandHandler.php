@@ -1,12 +1,11 @@
 <?php
 
 
-namespace App\Application\Command;
+namespace App\Application;
 
-
+use App\Application\Command\RequestActivitiesCommand;
 use App\Domain\Candidate;
 use App\Domain\CandidateRepository;
-use App\Domain\RequestedActivty;
 use App\Domain\ValueObject\ActivityCode;
 use App\Domain\ValueObject\Email;
 use App\Domain\ValueObject\RequestOrder;
@@ -26,12 +25,12 @@ class RequestActivitiesCommandHandler
         $order = 1;
 
         $candidate = new Candidate(
+            $this->candidateRepository->nextId(),
             Email::fromString($command->email()),
             StringValueObject::fromString($command->candidateName()),
             StringValueObject::fromString($command->group()),
-            array_map(function($requestedActivityCode) use (&$order) {
-
-                return new RequestedActivty(ActivityCode::fromString($requestedActivityCode), RequestOrder::fromInt($order++));
+            array_map(function ($requestedActivityCode) use (&$order) {
+                return [ActivityCode::fromString($requestedActivityCode), RequestOrder::fromInt($order++)];
             }, $command->orderedOtions())
         );
 

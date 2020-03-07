@@ -1,13 +1,15 @@
 default:
     suites:
-        default:
+        useCase:
+            paths: [tests/UseCase/features]
             contexts:
-                - FeatureContext:
+                - App\Tests\UseCase\Context\LoadCandidateRequestsContext:
                     kernel: '@kernel'
-                - ActivitatsContext: ~
+                    repository: '@App\Domain\CandidateRepository'
+                    commandHandler: '@App\Application\RequestActivitiesCommandHandler'
 
     extensions:
         Behat\Symfony2Extension:
             kernel:
-                bootstrap: features/bootstrap/bootstrap.php
+                bootstrap: tests/Infrastructure/Behat/bootstrap/bootstrap.php
                 class: App\Kernel

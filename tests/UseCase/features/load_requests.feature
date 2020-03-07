@@ -11,7 +11,7 @@ Feature: Load requests
       | user3@gmail.com | candidate 3 | group 1 | circ    | ioga    | dansa   | piscina | anglès  |
       | user4@gmail.com | candidate 4 | group 2 | ioga    | dansa   | circ    |         |         |
     When requests are loaded
-    Then user of email "user1@gmail.com" ordered requested options are "piscina, anglès, ioga, dansa, circ"
-    Then user of email "user2@gmail.com" ordered requested options are "ioga, anglès, piscina, circ"
-    Then user of email "user3@gmail.com" ordered requested options are "circ, ioga, dansa, piscina, anglès"
-    Then user of email "user4@gmail.com" ordered requested options are "ioga, dansa, circ"
+    Then candidate of email "user1@gmail.com" has been registered with "piscina,anglès,ioga,dansa,circ" ordered requests
+    Then candidate of email "user2@gmail.com" has been registered with "ioga,anglès,piscina,circ" ordered requests
+    Then candidate of email "user3@gmail.com" has been registered with "circ,ioga,dansa,piscina,anglès" ordered requests
+    Then candidate of email "user4@gmail.com" has been registered with "ioga,dansa,circ" ordered requests

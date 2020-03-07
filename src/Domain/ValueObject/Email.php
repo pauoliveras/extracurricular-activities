@@ -15,7 +15,13 @@ class Email
     {
         return new self($email);
     }
+
     public function value(): string
+    {
+        return $this->email;
+    }
+
+    public function __toString()
     {
         return $this->email;
     }
