@@ -8,6 +8,8 @@ default:
                     repository: '@App\Domain\CandidateRepository'
                     commandHandler: '@App\Application\RequestActivitiesCommandHandler'
 
+                - App\Tests\UseCase\Context\LoadCandidateRequestsFromCsvContext: ~
+
     extensions:
         Behat\Symfony2Extension:
             kernel:
