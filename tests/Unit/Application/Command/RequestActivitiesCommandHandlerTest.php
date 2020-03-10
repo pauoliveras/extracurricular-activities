@@ -4,8 +4,10 @@ namespace App\Tests\Unit\Application\Command;
 
 use App\Application\Command\RequestActivitiesCommand;
 use App\Application\RequestActivitiesCommandHandler;
+use App\Domain\ActivityRepository;
 use App\Domain\Candidate;
 use App\Domain\CandidateRepository;
+use App\Domain\NullActivity;
 use App\Domain\ValueObject\Email;
 use App\Domain\ValueObject\Id;
 use InvalidArgumentException;
@@ -19,11 +21,17 @@ class RequestActivitiesCommandHandlerTest extends TestCase
      */
     private $candidateRepository;
     private $requestActivitiesCommandHandler;
+    private $activityRepository;
 
     protected function setUp(): void
     {
         $this->candidateRepository = new InMemoryCandidateRepository();
-        $this->requestActivitiesCommandHandler = new RequestActivitiesCommandHandler($this->candidateRepository);
+        $this->activityRepository = $this->createMock(ActivityRepository::class);
+
+        $this->requestActivitiesCommandHandler = new RequestActivitiesCommandHandler(
+            $this->candidateRepository,
+            $this->activityRepository
+        );
     }
 
     public function test_candidate_request_is_created_with_provided_data()
@@ -50,6 +58,22 @@ class RequestActivitiesCommandHandlerTest extends TestCase
             'Candidate name',
             'Candidate group',
             []
+        );
+
+        $this->requestActivitiesCommandHandler->__invoke($command);
+    }
+
+    public function test_only_existing_activities_can_be_requested()
+    {
+        $this->activityRepository->method('findByCode')->willReturn(NullActivity::create());
+
+        $this->expectException(InvalidArgumentException::class);
+
+        $command = new RequestActivitiesCommand(
+            'candidate@email.com',
+            'Candidate name',
+            'Candidate group',
+            ['non_existing_activity']
         );
 
         $this->requestActivitiesCommandHandler->__invoke($command);
