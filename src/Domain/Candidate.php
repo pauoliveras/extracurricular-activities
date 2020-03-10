@@ -70,4 +70,9 @@ class Candidate
     {
         return new ArrayCollection($this->requestedActivities->toArray());
     }
+
+    public function isNull()
+    {
+        return false;
+    }
 }

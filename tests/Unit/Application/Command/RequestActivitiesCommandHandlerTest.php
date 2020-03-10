@@ -4,10 +4,14 @@ namespace App\Tests\Unit\Application\Command;
 
 use App\Application\Command\RequestActivitiesCommand;
 use App\Application\RequestActivitiesCommandHandler;
+use App\Domain\Activity;
 use App\Domain\ActivityRepository;
 use App\Domain\Candidate;
 use App\Domain\CandidateRepository;
+use App\Domain\Exception\DuplicateCandidateRequestException;
 use App\Domain\NullActivity;
+use App\Domain\NullCandidate;
+use App\Domain\ValueObject\ActivityCode;
 use App\Domain\ValueObject\Email;
 use App\Domain\ValueObject\Id;
 use InvalidArgumentException;
@@ -27,6 +31,8 @@ class RequestActivitiesCommandHandlerTest extends TestCase
     {
         $this->candidateRepository = new InMemoryCandidateRepository();
         $this->activityRepository = $this->createMock(ActivityRepository::class);
+
+        $this->activityRepository->method('findByCode')->willReturn(new Activity(Id::next(), ActivityCode::fromString('any')));
 
         $this->requestActivitiesCommandHandler = new RequestActivitiesCommandHandler(
             $this->candidateRepository,
@@ -79,6 +85,29 @@ class RequestActivitiesCommandHandlerTest extends TestCase
         $this->requestActivitiesCommandHandler->__invoke($command);
     }
 
+    public function test_only_one_request_per_candidate_can_be_placed()
+    {
+        $command = new RequestActivitiesCommand(
+            'candidate@email.com',
+            'Candidate name',
+            'Candidate group',
+            ['activity_1', 'activity_2']
+        );
+
+        $this->requestActivitiesCommandHandler->__invoke($command);
+
+        $this->expectException(DuplicateCandidateRequestException::class);
+
+        $command = new RequestActivitiesCommand(
+            'candidate@email.com',
+            'Candidate name',
+            'Candidate group',
+            ['activity_3']
+        );
+
+        $this->requestActivitiesCommandHandler->__invoke($command);
+    }
+
 }
 
 class InMemoryCandidateRepository implements CandidateRepository
@@ -91,9 +120,9 @@ class InMemoryCandidateRepository implements CandidateRepository
         $this->candidate[(string)$candidate->email()] = $candidate;
     }
 
-    public function findByEmail(Email $email): ?Candidate
+    public function findByEmail(Email $email): Candidate
     {
-        return $this->candidate[(string)$email];
+        return isset($this->candidate[(string)$email]) ? $this->candidate[(string)$email] : NullCandidate::create();
     }
 
     public function nextId(): Id

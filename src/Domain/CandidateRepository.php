@@ -9,7 +9,7 @@ interface CandidateRepository
 {
     public function save(Candidate $candidate);
 
-    public function findByEmail(Email $email): ?Candidate;
+    public function findByEmail(Email $email): Candidate;
 
     public function nextId(): Id;
 }

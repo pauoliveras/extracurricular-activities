@@ -7,6 +7,7 @@ use App\Application\Command\RequestActivitiesCommand;
 use App\Domain\ActivityRepository;
 use App\Domain\Candidate;
 use App\Domain\CandidateRepository;
+use App\Domain\Exception\DuplicateCandidateRequestException;
 use App\Domain\ValueObject\ActivityCode;
 use App\Domain\ValueObject\Email;
 use App\Domain\ValueObject\RequestOrder;
@@ -33,6 +34,8 @@ class RequestActivitiesCommandHandler
     public function __invoke(RequestActivitiesCommand $command)
     {
         $this->checkRequestedOptionsAreNotEmpty($command);
+
+        $this->checkCandidateHasntPlacedAnyRequest($command);
 
         $requestedActivities = $this->createOrderedRequestedActivitiesFromCommand($command->orderedOtions());
 
@@ -73,5 +76,14 @@ class RequestActivitiesCommandHandler
             $requestedActivities[] = [ActivityCode::fromString($requestedActivityCode), RequestOrder::fromInt($order++)];
         }
         return $requestedActivities;
+    }
+
+    protected function checkCandidateHasntPlacedAnyRequest(RequestActivitiesCommand $command): Candidate
+    {
+        $candidate = $this->candidateRepository->findByEmail(Email::fromString($command->email()));
+
+        if (!$candidate->isNull()) {
+            throw DuplicateCandidateRequestException::candidate(Email::fromString($command->email()));
+        }
     }
 }
