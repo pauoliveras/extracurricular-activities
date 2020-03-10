@@ -10,6 +10,7 @@ use App\Domain\ValueObject\ActivityCode;
 use App\Domain\ValueObject\Email;
 use App\Domain\ValueObject\RequestOrder;
 use App\Domain\ValueObject\StringValueObject;
+use InvalidArgumentException;
 
 class RequestActivitiesCommandHandler
 {
@@ -22,6 +23,8 @@ class RequestActivitiesCommandHandler
 
     public function __invoke(RequestActivitiesCommand $command)
     {
+        $this->checkRequestedOptionsAreNotEmpty($command);
+
         $order = 1;
 
         $candidate = new Candidate(
@@ -35,5 +38,15 @@ class RequestActivitiesCommandHandler
         );
 
         $this->candidateRepository->save($candidate);
+    }
+
+    /**
+     * @param RequestActivitiesCommand $command
+     */
+    protected function checkRequestedOptionsAreNotEmpty(RequestActivitiesCommand $command): void
+    {
+        if (empty($command->orderedOtions())) {
+            throw new InvalidArgumentException('Candidate must provide at least one requested option');
+        }
     }
 }

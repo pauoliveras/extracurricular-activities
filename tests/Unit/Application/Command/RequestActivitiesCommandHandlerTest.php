@@ -8,6 +8,7 @@ use App\Domain\Candidate;
 use App\Domain\CandidateRepository;
 use App\Domain\ValueObject\Email;
 use App\Domain\ValueObject\Id;
+use InvalidArgumentException;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -38,6 +39,20 @@ class RequestActivitiesCommandHandlerTest extends TestCase
 
         $savedCandidate = $this->candidateRepository->findByEmail(Email::fromString('candidate@email.com'));
         $this->assertNotNull($savedCandidate);
+    }
+
+    public function test_candidate_request_must_have_at_least_one_option_selected()
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        $command = new RequestActivitiesCommand(
+            'candidate@email.com',
+            'Candidate name',
+            'Candidate group',
+            []
+        );
+
+        $this->requestActivitiesCommandHandler->__invoke($command);
     }
 
 }
