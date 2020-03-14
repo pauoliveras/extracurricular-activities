@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class RequestedActivty
 {
     /**
-     * @ORM\Column(type="uuid")
+     * @ORM\Column(type="identity")
      * @ORM\Id()
      */
     private $id;
@@ -47,6 +47,11 @@ class RequestedActivty
     public function code(): ActivityCode
     {
         return ActivityCode::fromString($this->activityCode);
+    }
+
+    public function order()
+    {
+        return RequestOrder::fromInt($this->order);
     }
 
 }

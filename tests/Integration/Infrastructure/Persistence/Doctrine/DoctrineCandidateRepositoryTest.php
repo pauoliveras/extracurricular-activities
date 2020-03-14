@@ -10,10 +10,12 @@ use App\Domain\ValueObject\Id;
 use App\Domain\ValueObject\RequestOrder;
 use App\Domain\ValueObject\StringValueObject;
 use App\Tests\Integration\BaseKernelTestCase;
+use Doctrine\ORM\EntityManagerInterface;
 
 class DoctrineCandidateRepositoryTest extends BaseKernelTestCase
 {
     private $repository;
+    private $em;
 
     public function test_candidate_can_be_saved_and_retrieved()
     {
@@ -31,9 +33,14 @@ class DoctrineCandidateRepositoryTest extends BaseKernelTestCase
 
         $this->repository->save($candidate);
 
+        $this->em->clear();
+
         $savedCandidate = $this->repository->findByEmail(Email::fromString('test@email.com'));
 
-        $this->assertEquals($candidate, $savedCandidate);
+        $this->assertEquals($candidate->email(), $savedCandidate->email());
+        $this->assertEquals($candidate->candidateName(), $savedCandidate->candidateName());
+        $this->assertEquals($candidate->candidateGroup(), $savedCandidate->candidateGroup());
+        $this->assertEquals($candidate->requestedActivities(), $savedCandidate->requestedActivities());
     }
 
     protected function setUp(): void
@@ -41,6 +48,8 @@ class DoctrineCandidateRepositoryTest extends BaseKernelTestCase
         parent::setup();
 
         $this->repository = $this->testContainer->get(CandidateRepository::class);
+
+        $this->em = $this->testContainer->get(EntityManagerInterface::class);
     }
 
 }

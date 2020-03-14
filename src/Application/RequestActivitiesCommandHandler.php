@@ -78,7 +78,7 @@ class RequestActivitiesCommandHandler
         return $requestedActivities;
     }
 
-    protected function checkCandidateHasntPlacedAnyRequest(RequestActivitiesCommand $command): Candidate
+    protected function checkCandidateHasntPlacedAnyRequest(RequestActivitiesCommand $command)
     {
         $candidate = $this->candidateRepository->findByEmail(Email::fromString($command->email()));
 

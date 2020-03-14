@@ -20,19 +20,18 @@ use PHPUnit\Framework\TestCase;
 
 class RequestActivitiesCommandHandlerTest extends TestCase
 {
-    /**
-     * @var MockObject
-     */
+    /** @var MockObject */
     private $candidateRepository;
+
     private $requestActivitiesCommandHandler;
+
+    /** @var MockObject | ActivityRepository */
     private $activityRepository;
 
     protected function setUp(): void
     {
         $this->candidateRepository = new InMemoryCandidateRepository();
         $this->activityRepository = $this->createMock(ActivityRepository::class);
-
-        $this->activityRepository->method('findByCode')->willReturn(new Activity(Id::next(), ActivityCode::fromString('any')));
 
         $this->requestActivitiesCommandHandler = new RequestActivitiesCommandHandler(
             $this->candidateRepository,
@@ -47,6 +46,12 @@ class RequestActivitiesCommandHandlerTest extends TestCase
             'Candidate name',
             'Candidate group',
             ['activity_1', 'activity_2', 'activity_3']
+        );
+
+        $this->activityRepository->method('findByCode')->willReturnOnConsecutiveCalls(
+            new Activity(Id::next(), ActivityCode::fromString('activity_1')),
+            new Activity(Id::next(), ActivityCode::fromString('activity_2')),
+            new Activity(Id::next(), ActivityCode::fromString('activity_3'))
         );
 
         $this->requestActivitiesCommandHandler->__invoke($command);
@@ -71,7 +76,9 @@ class RequestActivitiesCommandHandlerTest extends TestCase
 
     public function test_only_existing_activities_can_be_requested()
     {
-        $this->activityRepository->method('findByCode')->willReturn(NullActivity::create());
+        $this->activityRepository->method('findByCode')
+            ->with(ActivityCode::fromString('non_existing_activity'))
+            ->willReturn(NullActivity::create());
 
         $this->expectException(InvalidArgumentException::class);
 

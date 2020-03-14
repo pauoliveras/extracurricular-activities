@@ -18,7 +18,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Candidate
 {
     /**
-     * @ORM\Column(type="uuid")
+     * @ORM\Column(type="identity")
      * @ORM\Id()
      */
     private $id;
@@ -35,7 +35,15 @@ class Candidate
      */
     private $group;
     /**
-     * @ORM\OneToMany(targetEntity="App\Domain\RequestedActivty", mappedBy="candidate", cascade={"persist", "remove", "merge"}, orphanRemoval=true)
+     * @ORM\OneToMany(
+     *     targetEntity="App\Domain\RequestedActivty",
+     *     mappedBy="candidate",
+     *     cascade={"persist", "remove", "merge"},
+     *     orphanRemoval=true,
+     *     fetch="EAGER"
+     * )
+     * @ORM\OrderBy({"order" = "ASC"})
+     *
      */
     private $requestedActivities;
 
@@ -68,11 +76,29 @@ class Candidate
 
     public function requestedActivities(): ArrayCollection
     {
-        return new ArrayCollection($this->requestedActivities->toArray());
+        $iterator = $this->requestedActivities->getIterator();
+
+        $iterator->uasort(
+            function (RequestedActivty $activityA, RequestedActivty $activityB) {
+                return $activityA->order()->value() < $activityB->order()->value() ? 1 : -1;
+            }
+        );
+
+        return new ArrayCollection(iterator_to_array($iterator));
     }
 
     public function isNull()
     {
         return false;
+    }
+
+    public function candidateName(): StringValueObject
+    {
+        return StringValueObject::fromString($this->candidateName);
+    }
+
+    public function candidateGroup(): StringValueObject
+    {
+        return StringValueObject::fromString($this->group);
     }
 }
