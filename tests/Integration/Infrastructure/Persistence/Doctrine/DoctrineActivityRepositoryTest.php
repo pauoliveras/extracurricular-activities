@@ -14,7 +14,7 @@ class DoctrineActivityRepositoryTest extends BaseKernelTestCase
     private $repository;
     private $em;
 
-    public function test_activiies_can_be_saved_and_retrieved()
+    public function test_activities_can_be_saved_and_retrieved()
     {
         $activityId = Id::next();
         $activity = new Activity(

@@ -2,9 +2,15 @@
 
 namespace App\Tests\UseCase\Context;
 
+use App\Domain\Activity;
+use App\Domain\ActivityRepository;
+use App\Domain\ValueObject\ActivityCode;
+use App\Domain\ValueObject\Id;
+use App\Infrastructure\Persistence\Doctrine\DoctrineActivityRepository;
 use App\Kernel;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Gherkin\Node\PyStringNode;
+use Behat\Gherkin\Node\TableNode;
 use Behat\Symfony2Extension\Context\KernelAwareContext;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManagerInterface;
@@ -19,6 +25,10 @@ class LoadCandidateRequestsFromCsvContext implements KernelAwareContext
      * @var Kernel
      */
     private $kernel;
+    /**
+     * @var DoctrineActivityRepository
+     */
+    private $activityRepository;
 
     /**
      * @BeforeScenario
@@ -31,6 +41,8 @@ class LoadCandidateRequestsFromCsvContext implements KernelAwareContext
         $purger = new ORMPurger($em, []);
 
         $purger->purge();
+
+        $this->activityRepository = $testContainer->get(ActivityRepository::class);
     }
 
     /**
@@ -64,6 +76,16 @@ class LoadCandidateRequestsFromCsvContext implements KernelAwareContext
         $commandTester->execute([
             'filename' => $filename,
         ]);
+    }
+
+    /**
+     * @Given /^following activities are available to request:$/
+     */
+    public function followingActivitiesAreAvailableToRequest(TableNode $table)
+    {
+        foreach ($table as $activity) {
+            $this->activityRepository->save(new Activity(Id::next(), ActivityCode::fromString($activity['activity_code'])));
+        }
     }
 
 }

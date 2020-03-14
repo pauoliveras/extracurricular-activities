@@ -12,6 +12,14 @@ Feature: Load requests from file
     user3@gmail.com;candidate 3;group 1;circ;ioga;dansa;piscina;anglès
     user4@gmail.com;candidate 4;group 2;ioga;dansa;circ
     """
+    And following activities are available to request:
+      | activity_code |
+      | anglès        |
+      | piscina       |
+      | ioga          |
+      | dansa         |
+      | circ          |
+
     When load requests command is executed against file "var/data/tests/requests.csv"
     Then candidate of email "user1@gmail.com" has been registered with "piscina,anglès,ioga,dansa,circ" ordered requests
     Then candidate of email "user2@gmail.com" has been registered with "ioga,anglès,piscina,circ" ordered requests

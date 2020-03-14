@@ -4,6 +4,7 @@ namespace App\Infrastructure\Persistence\Doctrine;
 
 use App\Domain\Activity;
 use App\Domain\ActivityRepository;
+use App\Domain\NullActivity;
 use App\Domain\ValueObject\ActivityCode;
 use App\Domain\ValueObject\Id;
 use Doctrine\ORM\EntityManagerInterface;
@@ -22,7 +23,9 @@ class DoctrineActivityRepository implements ActivityRepository
 
     public function findByCode(ActivityCode $code): Activity
     {
+        $activity = $this->repository->findOneBy(['code' => $code->value()]);
 
+        return $activity ?? NullActivity::create();
     }
 
     public function ofId(Id $id): Activity

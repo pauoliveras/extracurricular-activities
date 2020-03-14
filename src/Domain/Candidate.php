@@ -80,7 +80,7 @@ class Candidate
 
         $iterator->uasort(
             function (RequestedActivty $activityA, RequestedActivty $activityB) {
-                return $activityA->order()->value() < $activityB->order()->value() ? 1 : -1;
+                return $activityA->order()->value() > $activityB->order()->value() ? 1 : -1;
             }
         );
 
