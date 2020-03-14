@@ -92,6 +92,26 @@ class RequestActivitiesCommandHandlerTest extends TestCase
         $this->requestActivitiesCommandHandler->__invoke($command);
     }
 
+    public function test_activities_can_not_be_requested_multiple_times()
+    {
+        $this->activityRepository->method('findByCode')->willReturnOnConsecutiveCalls(
+            new Activity(Id::next(), ActivityCode::fromString('activity_1')),
+            new Activity(Id::next(), ActivityCode::fromString('activity_2')),
+            new Activity(Id::next(), ActivityCode::fromString('activity_1'))
+        );
+
+        $this->expectException(InvalidArgumentException::class);
+
+        $command = new RequestActivitiesCommand(
+            'candidate@email.com',
+            'Candidate name',
+            'Candidate group',
+            ['activity_1', 'activity_2', 'activity_1']
+        );
+
+        $this->requestActivitiesCommandHandler->__invoke($command);
+    }
+
     public function test_only_one_request_per_candidate_can_be_placed()
     {
         $command = new RequestActivitiesCommand(

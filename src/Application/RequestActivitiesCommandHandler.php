@@ -37,6 +37,8 @@ class RequestActivitiesCommandHandler
 
         $this->checkCandidateHasntPlacedAnyRequest($command);
 
+        $this->checkForDuplicatedActivityRequest($command);
+
         $requestedActivities = $this->createOrderedRequestedActivitiesFromCommand($command->orderedOtions());
 
         $candidate = new Candidate(
@@ -86,4 +88,16 @@ class RequestActivitiesCommandHandler
             throw DuplicateCandidateRequestException::candidate(Email::fromString($command->email()));
         }
     }
+
+    protected function checkForDuplicatedActivityRequest(RequestActivitiesCommand $command): void
+    {
+        $requestedActivities = [];
+        foreach ($command->orderedOtions() as $orderedOtion) {
+            if (in_array($orderedOtion, $requestedActivities)) {
+                throw new InvalidArgumentException(sprintf('Activity of code %s has been requested already', $orderedOtion));
+            }
+            $requestedActivities[] = $orderedOtion;
+        }
+    }
+
 }
