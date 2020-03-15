@@ -60,20 +60,6 @@ class RequestActivitiesCommandHandlerTest extends TestCase
         $this->assertNotNull($savedCandidate);
     }
 
-    public function test_candidate_request_must_have_at_least_one_option_selected()
-    {
-        $this->expectException(InvalidArgumentException::class);
-
-        $command = new RequestActivitiesCommand(
-            'candidate@email.com',
-            'Candidate name',
-            'Candidate group',
-            []
-        );
-
-        $this->requestActivitiesCommandHandler->__invoke($command);
-    }
-
     public function test_only_existing_activities_can_be_requested()
     {
         $this->activityRepository->method('findByCode')
@@ -87,26 +73,6 @@ class RequestActivitiesCommandHandlerTest extends TestCase
             'Candidate name',
             'Candidate group',
             ['non_existing_activity']
-        );
-
-        $this->requestActivitiesCommandHandler->__invoke($command);
-    }
-
-    public function test_activities_can_not_be_requested_multiple_times()
-    {
-        $this->activityRepository->method('findByCode')->willReturnOnConsecutiveCalls(
-            new Activity(Id::next(), ActivityCode::fromString('activity_1')),
-            new Activity(Id::next(), ActivityCode::fromString('activity_2')),
-            new Activity(Id::next(), ActivityCode::fromString('activity_1'))
-        );
-
-        $this->expectException(InvalidArgumentException::class);
-
-        $command = new RequestActivitiesCommand(
-            'candidate@email.com',
-            'Candidate name',
-            'Candidate group',
-            ['activity_1', 'activity_2', 'activity_1']
         );
 
         $this->requestActivitiesCommandHandler->__invoke($command);
