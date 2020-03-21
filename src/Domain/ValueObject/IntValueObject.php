@@ -4,7 +4,7 @@ namespace App\Domain\ValueObject;
 
 class IntValueObject
 {
-    private $value;
+    protected $value;
 
     public function __construct(int $value)
     {

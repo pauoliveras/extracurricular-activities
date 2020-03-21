@@ -63,14 +63,35 @@ class Candidate
         $this->candidateName = $candidateName->value();
         $this->group = $group->value();
         $this->requestedActivities = new ArrayCollection();
-        foreach ($requestedActivities as $requestedActivity) {
-            $this->addRequestedActivity($requestedActivity);
+        $this->addRequestedActivities($requestedActivities);
+    }
+
+    protected function guardAgainstEmptyRequestedActivities(RequestedActivitiesList $requestedActivities): void
+    {
+        if ($requestedActivities->isEmpty()) {
+            throw new InvalidArgumentException('Requested activities must have at least one element');
+        }
+    }
+
+    protected function addRequestedActivities(RequestedActivitiesList $requestedActivities): void
+    {
+        $requestOrder = RequestOrder::initial();
+
+        foreach ($requestedActivities as $requestedActivityCode) {
+            $this->requestedActivities->add(
+                new RequestedActivty(
+                    Id::next(),
+                    $requestedActivityCode,
+                    $requestOrder,
+                    $this
+                )
+            );
+            $requestOrder->next();
         }
     }
 
     private function addRequestedActivity(ActivityCode $activityCode)
     {
-        $this->requestedActivities->add(new RequestedActivty(Id::next(), $activityCode, RequestOrder::fromInt(count($this->requestedActivities) + 1), $this));
     }
 
     public function email(): Email
@@ -106,10 +127,4 @@ class Candidate
         return StringValueObject::fromString($this->group);
     }
 
-    protected function guardAgainstEmptyRequestedActivities(RequestedActivitiesList $requestedActivities): void
-    {
-        if ($requestedActivities->isEmpty()) {
-            throw new InvalidArgumentException('Requested activities must have at least one element');
-        }
-    }
 }

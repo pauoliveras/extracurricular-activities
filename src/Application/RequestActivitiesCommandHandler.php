@@ -32,11 +32,7 @@ class RequestActivitiesCommandHandler
 
     public function __invoke(RequestActivitiesCommand $command)
     {
-        $this->checkRequestedOptionsAreNotEmpty($command);
-
         $this->checkCandidateHasntPlacedAnyRequest($command);
-
-        $this->checkForDuplicatedActivityRequest($command);
 
         $requestedActivities = RequestedActivitiesList::createFromArray($command->orderedOtions());
 
@@ -51,16 +47,6 @@ class RequestActivitiesCommandHandler
         );
 
         $this->candidateRepository->save($candidate);
-    }
-
-    /**
-     * @param RequestActivitiesCommand $command
-     */
-    protected function checkRequestedOptionsAreNotEmpty(RequestActivitiesCommand $command): void
-    {
-        if (empty($command->orderedOtions())) {
-            throw new InvalidArgumentException('Candidate must provide at least one requested option');
-        }
     }
 
     protected function ensureRequestedActivitiesExist(RequestedActivitiesList $orderedOptions): void
@@ -81,17 +67,6 @@ class RequestActivitiesCommandHandler
 
         if (!$candidate->isNull()) {
             throw DuplicateCandidateRequestException::candidate(Email::fromString($command->email()));
-        }
-    }
-
-    protected function checkForDuplicatedActivityRequest(RequestActivitiesCommand $command): void
-    {
-        $requestedActivities = [];
-        foreach ($command->orderedOtions() as $orderedOtion) {
-            if (in_array($orderedOtion, $requestedActivities)) {
-                throw new InvalidArgumentException(sprintf('Activity of code %s has been requested already', $orderedOtion));
-            }
-            $requestedActivities[] = $orderedOtion;
         }
     }
 
