@@ -8,9 +8,9 @@ use App\Domain\ActivityRepository;
 use App\Domain\Candidate;
 use App\Domain\CandidateRepository;
 use App\Domain\Exception\DuplicateCandidateRequestException;
+use App\Domain\RequestedActivitiesList;
 use App\Domain\ValueObject\ActivityCode;
 use App\Domain\ValueObject\Email;
-use App\Domain\ValueObject\RequestOrder;
 use App\Domain\ValueObject\StringValueObject;
 use InvalidArgumentException;
 
@@ -39,7 +39,9 @@ class RequestActivitiesCommandHandler
 
         $this->checkForDuplicatedActivityRequest($command);
 
-        $requestedActivities = $this->createOrderedRequestedActivitiesFromCommand($command->orderedOtions());
+        $requestedActivities = RequestedActivitiesList::createFromArray($command->orderedOtions());
+
+        $this->ensureRequestedActivitiesExist($requestedActivities);
 
         $candidate = new Candidate(
             $this->candidateRepository->nextId(),
@@ -62,22 +64,16 @@ class RequestActivitiesCommandHandler
         }
     }
 
-    protected function createOrderedRequestedActivitiesFromCommand(array $orderedOptions): array
+    protected function ensureRequestedActivitiesExist(RequestedActivitiesList $orderedOptions): void
     {
-        $requestedActivities = [];
-        $order = 1;
-
         foreach ($orderedOptions as $requestedActivityCode) {
             $activity = $this->activityRepository->findByCode(ActivityCode::fromString($requestedActivityCode));
-
             if ($activity->isNull()) {
                 throw new InvalidArgumentException(
                     sprintf('Activity of code %s not found', $requestedActivityCode)
                 );
             }
-            $requestedActivities[] = [ActivityCode::fromString($requestedActivityCode), RequestOrder::fromInt($order++)];
         }
-        return $requestedActivities;
     }
 
     protected function checkCandidateHasntPlacedAnyRequest(RequestActivitiesCommand $command)

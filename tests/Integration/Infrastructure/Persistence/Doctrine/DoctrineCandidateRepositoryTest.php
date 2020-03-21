@@ -4,10 +4,9 @@ namespace App\Tests\Integration\Infrastructure\Persistence\Doctrine;
 
 use App\Domain\Candidate;
 use App\Domain\CandidateRepository;
-use App\Domain\ValueObject\ActivityCode;
+use App\Domain\RequestedActivitiesList;
 use App\Domain\ValueObject\Email;
 use App\Domain\ValueObject\Id;
-use App\Domain\ValueObject\RequestOrder;
 use App\Domain\ValueObject\StringValueObject;
 use App\Tests\Integration\BaseKernelTestCase;
 use Doctrine\ORM\EntityManagerInterface;
@@ -24,11 +23,7 @@ class DoctrineCandidateRepositoryTest extends BaseKernelTestCase
             Email::fromString('test@email.com'),
             StringValueObject::fromString('candidate name'),
             StringValueObject::fromString('group'),
-            [
-                [ActivityCode::fromString('activity_1'), RequestOrder::fromInt(1)],
-                [ActivityCode::fromString('activity_2'), RequestOrder::fromInt(2)],
-                [ActivityCode::fromString('activity_3'), RequestOrder::fromInt(3)]
-            ]
+            RequestedActivitiesList::createFromArray(['activity_1', 'activity_2', 'activity_3'])
         );
 
         $this->repository->save($candidate);

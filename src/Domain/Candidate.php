@@ -54,7 +54,7 @@ class Candidate
         Email $email,
         StringValueObject $candidateName,
         StringValueObject $group,
-        array $requestedActivities
+        RequestedActivitiesList $requestedActivities
     )
     {
         $this->guardAgainstEmptyRequestedActivities($requestedActivities);
@@ -62,17 +62,15 @@ class Candidate
         $this->email = $email->value();
         $this->candidateName = $candidateName->value();
         $this->group = $group->value();
+        $this->requestedActivities = new ArrayCollection();
         foreach ($requestedActivities as $requestedActivity) {
-            $this->addRequestedActivity($requestedActivity[0], $requestedActivity[1]);
+            $this->addRequestedActivity($requestedActivity);
         }
     }
 
-    private function addRequestedActivity(ActivityCode $activityCode, RequestOrder $order)
+    private function addRequestedActivity(ActivityCode $activityCode)
     {
-        if (array_key_exists((string)$activityCode, $this->requestedActivities)) {
-            throw new InvalidArgumentException(sprintf('Activity of code %s has already been requested', (string)$activityCode));
-        }
-        $this->requestedActivities[(string)$activityCode] = new RequestedActivty(Id::next(), $activityCode, $order, $this);
+        $this->requestedActivities->add(new RequestedActivty(Id::next(), $activityCode, RequestOrder::fromInt(count($this->requestedActivities) + 1), $this));
     }
 
     public function email(): Email
@@ -82,7 +80,7 @@ class Candidate
 
     public function requestedActivities(): ArrayCollection
     {
-        $iterator = new ArrayIterator($this->requestedActivities);
+        $iterator = new ArrayIterator($this->requestedActivities->toArray());
 
         $iterator->uasort(
             function (RequestedActivty $activityA, RequestedActivty $activityB) {
@@ -108,12 +106,9 @@ class Candidate
         return StringValueObject::fromString($this->group);
     }
 
-    /**
-     * @param array $requestedActivities
-     */
-    protected function guardAgainstEmptyRequestedActivities(array $requestedActivities): void
+    protected function guardAgainstEmptyRequestedActivities(RequestedActivitiesList $requestedActivities): void
     {
-        if (empty($requestedActivities)) {
+        if ($requestedActivities->isEmpty()) {
             throw new InvalidArgumentException('Requested activities must have at least one element');
         }
     }
