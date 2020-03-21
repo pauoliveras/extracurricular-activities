@@ -2,22 +2,26 @@
 
 namespace App\Domain\ValueObject;
 
-class RequestOrder
+use Webmozart\Assert\Assert;
+
+class RequestOrder extends IntValueObject
 {
-    private $order;
+    private const INITIAL_ORDER_VALUE = 1;
 
-    public function __construct(int $order)
+    public function __construct(int $value)
     {
-        $this->order = $order;
+        Assert::greaterThan($value, 0);
+
+        parent::__construct($value);
     }
 
-    public static function fromInt(int $order)
+    public static function initial(): self
     {
-        return new self($order);
+        return new self(self::INITIAL_ORDER_VALUE);
     }
 
-    public function value()
+    public function next(): self
     {
-        return $this->order;
+        return new self($this->value() + 1);
     }
 }

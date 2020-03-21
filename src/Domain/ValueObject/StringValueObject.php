@@ -13,7 +13,12 @@ class StringValueObject
 
     public static function fromString(string $value): self
     {
-        return new self($value);
+        return new static($value);
+    }
+
+    public function __toString()
+    {
+        return $this->value;
     }
 
     public function value(): string

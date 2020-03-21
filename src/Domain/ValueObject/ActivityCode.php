@@ -4,27 +4,7 @@
 namespace App\Domain\ValueObject;
 
 
-class ActivityCode
+class ActivityCode extends StringValueObject
 {
-    private $code;
 
-    public function __construct(string $code)
-    {
-        $this->code = $code;
-    }
-
-    public static function fromString(string $code): self
-    {
-        return new self($code);
-    }
-
-    public function value(): string
-    {
-        return $this->code;
-    }
-
-    public function __toString(): string
-    {
-        return $this->code;
-    }
 }
