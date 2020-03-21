@@ -2,28 +2,13 @@
 
 namespace App\Domain\ValueObject;
 
-class Email
-{
-    private $email;
+use Webmozart\Assert\Assert;
 
+class Email extends StringValueObject
+{
     public function __construct(string $email)
     {
-        $this->email = $email;
+        Assert::email($email, 'Non valid e-mail provided');
+        parent::__construct($email);
     }
-
-    public static function fromString(string $email)
-    {
-        return new self($email);
-    }
-
-    public function value(): string
-    {
-        return $this->email;
-    }
-
-    public function __toString()
-    {
-        return $this->email;
-    }
-
 }
