@@ -9,7 +9,6 @@ use App\Domain\Candidate;
 use App\Domain\CandidateRepository;
 use App\Domain\Exception\DuplicateCandidateRequestException;
 use App\Domain\RequestedActivitiesList;
-use App\Domain\ValueObject\ActivityCode;
 use App\Domain\ValueObject\Email;
 use App\Domain\ValueObject\StringValueObject;
 use InvalidArgumentException;
@@ -67,7 +66,7 @@ class RequestActivitiesCommandHandler
     protected function ensureRequestedActivitiesExist(RequestedActivitiesList $orderedOptions): void
     {
         foreach ($orderedOptions as $requestedActivityCode) {
-            $activity = $this->activityRepository->findByCode(ActivityCode::fromString($requestedActivityCode));
+            $activity = $this->activityRepository->findByCode($requestedActivityCode);
             if ($activity->isNull()) {
                 throw new InvalidArgumentException(
                     sprintf('Activity of code %s not found', $requestedActivityCode)
