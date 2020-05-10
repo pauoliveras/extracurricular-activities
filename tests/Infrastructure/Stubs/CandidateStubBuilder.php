@@ -42,7 +42,7 @@ class CandidateStubBuilder
                 'candidateName' => $this->candidateName->value(),
                 'group' => $this->candidateGroup->value(),
                 'requestedActivities' => $this->requestedActivitiesList,
-                'candidateNumber' => $this->candidateNumber->value()
+                'candidateNumber' => $this->candidateNumber ? $this->candidateNumber->value() : null
             ]
         );
         $this->reset();
