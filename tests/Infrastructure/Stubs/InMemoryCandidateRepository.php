@@ -11,7 +11,7 @@ use App\Domain\ValueObject\Id;
 
 class InMemoryCandidateRepository implements CandidateRepository
 {
-    private $candidates;
+    private $candidates = [];
     private $savedCandidates = 0;
 
     public function save(Candidate $candidate)

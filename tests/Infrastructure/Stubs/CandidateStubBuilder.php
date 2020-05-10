@@ -3,6 +3,8 @@
 namespace App\Tests\Infrastructure\Stubs;
 
 use App\Domain\Candidate;
+use App\Domain\ValueObject\CandidateNumber;
+use App\Tests\Infrastructure\Service\ReflectionEntityManager;
 
 class CandidateStubBuilder
 {
@@ -11,11 +13,8 @@ class CandidateStubBuilder
     private $candidateName;
     private $candidateGroup;
     private $requestedActivitiesList;
+    private $candidateNumber;
 
-    /**
-     *
-     * CandidateStubBuilder constructor.
-     */
     public function __construct()
     {
         $this->reset();
@@ -28,22 +27,39 @@ class CandidateStubBuilder
         $this->candidateName = StubCandidateName::random();
         $this->candidateGroup = StubCandidateGroup::random();
         $this->requestedActivitiesList = StubRequestedActivitiesList::random();
+        $this->candidateNumber = null;
     }
 
     public function build(): Candidate
     {
-        return new Candidate(
-            $this->id,
-            $this->email,
-            $this->candidateName,
-            $this->candidateGroup,
-            $this->requestedActivitiesList
+        $reflectionEntityManager = new ReflectionEntityManager();
+
+        $candidate = $reflectionEntityManager->buildObject(
+            Candidate::class,
+            [
+                'id' => $this->id,
+                'email' => $this->email->value(),
+                'candidateName' => $this->candidateName->value(),
+                'group' => $this->candidateGroup->value(),
+                'requestedActivities' => $this->requestedActivitiesList,
+                'candidateNumber' => $this->candidateNumber->value()
+            ]
         );
+        $this->reset();
+
+        return $candidate;
     }
 
     public function withRandomActivities(array $activities)
     {
         $this->requestedActivitiesList = StubRequestedActivitiesList::randomWith($activities);
+
+        return $this;
+    }
+
+    public function withNumber(CandidateNumber $candidateNumber)
+    {
+        $this->candidateNumber = $candidateNumber;
 
         return $this;
     }
