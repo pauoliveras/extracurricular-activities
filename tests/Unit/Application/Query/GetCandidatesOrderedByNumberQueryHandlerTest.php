@@ -13,7 +13,7 @@ use App\Tests\Infrastructure\Stubs\InMemoryCandidateRepository;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
-class GetCandidatesOrderedByNumberTest extends TestCase
+class GetCandidatesOrderedByNumberQueryHandlerTest extends TestCase
 {
     private $queryHandler;
     private $candidateRepository;
