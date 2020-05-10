@@ -5,15 +5,12 @@ namespace App\Tests\UseCase\Context;
 use App\Application\Command\RequestActivitiesCommandBuilder;
 use App\Application\RequestActivitiesCommandHandler;
 use App\Domain\CandidateRepository;
-use App\Domain\RequestedActivty;
-use App\Domain\ValueObject\Email;
 use App\Kernel;
 use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Gherkin\Node\TableNode;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManagerInterface;
-use Webmozart\Assert\Assert;
 
 class LoadCandidateRequestsContext implements Context
 {
@@ -83,22 +80,6 @@ class LoadCandidateRequestsContext implements Context
         }
     }
 
-    /**
-     * @Then /^candidate of email "([^"]*)" has been registered with "([^"]*)" ordered requests$/
-     */
-    public function candidateOfEmailHasBeenRegisteredWithOrderedRequests($email, $requestedActivitiesCodes)
-    {
-        $candidate = $this->candidateRepository->findByEmail(Email::fromString($email));
 
-        Assert::notNull($candidate);
-
-        Assert::eq($requestedActivitiesCodes, implode(',', array_map(
-                function (RequestedActivty $requestedActivty) {
-                    return (string)$requestedActivty->code();
-                },
-                $candidate->requestedActivities()->toArray()
-            ))
-        );
-    }
 
 }

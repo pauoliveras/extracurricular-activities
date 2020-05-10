@@ -22,6 +22,6 @@ class RequestOrder extends IntValueObject
 
     public function next(): self
     {
-        return new self($this->value++);
+        return new self(++$this->value);
     }
 }

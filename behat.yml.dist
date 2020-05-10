@@ -3,12 +3,10 @@ default:
         useCase:
             paths: [tests/UseCase/features]
             contexts:
-                - App\Tests\UseCase\Context\LoadCandidateRequestsContext:
+                - App\Tests\UseCase\Context\LoadCandidateRequestsFromCsvContext:
                     kernel: '@kernel'
-                    repository: '@App\Domain\CandidateRepository'
-                    commandHandler: '@App\Application\RequestActivitiesCommandHandler'
-
-                - App\Tests\UseCase\Context\LoadCandidateRequestsFromCsvContext: ~
+                - App\Tests\UseCase\Context\RandomizeCandidatesContext:
+                    kernel: '@kernel'
 
     extensions:
         Behat\Symfony2Extension:

@@ -3,6 +3,7 @@
 namespace App\Infrastructure\Persistence\Doctrine;
 
 use App\Domain\Candidate;
+use App\Domain\CandidateCollection;
 use App\Domain\CandidateRepository;
 use App\Domain\NullCandidate;
 use App\Domain\ValueObject\Email;
@@ -36,5 +37,10 @@ class DoctrineCandidateRepository implements CandidateRepository
     public function nextId(): Id
     {
         return Id::next();
+    }
+
+    public function findAll(): CandidateCollection
+    {
+        return new CandidateCollection($this->repository->findAll());
     }
 }

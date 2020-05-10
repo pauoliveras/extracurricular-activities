@@ -11,5 +11,7 @@ interface CandidateRepository
 
     public function findByEmail(Email $email): Candidate;
 
+    public function findAll(): CandidateCollection;
+
     public function nextId(): Id;
 }

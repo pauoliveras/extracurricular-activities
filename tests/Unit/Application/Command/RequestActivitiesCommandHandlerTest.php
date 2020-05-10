@@ -6,14 +6,12 @@ use App\Application\Command\RequestActivitiesCommand;
 use App\Application\RequestActivitiesCommandHandler;
 use App\Domain\Activity;
 use App\Domain\ActivityRepository;
-use App\Domain\Candidate;
-use App\Domain\CandidateRepository;
 use App\Domain\Exception\DuplicateCandidateRequestException;
 use App\Domain\NullActivity;
-use App\Domain\NullCandidate;
 use App\Domain\ValueObject\ActivityCode;
 use App\Domain\ValueObject\Email;
 use App\Domain\ValueObject\Id;
+use App\Tests\Infrastructure\Stubs\InMemoryCandidateRepository;
 use InvalidArgumentException;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -101,25 +99,4 @@ class RequestActivitiesCommandHandlerTest extends TestCase
         $this->requestActivitiesCommandHandler->__invoke($command);
     }
 
-}
-
-class InMemoryCandidateRepository implements CandidateRepository
-{
-
-    private $candidate;
-
-    public function save(Candidate $candidate)
-    {
-        $this->candidate[(string)$candidate->email()] = $candidate;
-    }
-
-    public function findByEmail(Email $email): Candidate
-    {
-        return isset($this->candidate[(string)$email]) ? $this->candidate[(string)$email] : NullCandidate::create();
-    }
-
-    public function nextId(): Id
-    {
-        return Id::next();
-    }
 }

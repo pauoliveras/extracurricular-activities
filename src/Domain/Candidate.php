@@ -3,6 +3,7 @@
 namespace App\Domain;
 
 use App\Domain\ValueObject\ActivityCode;
+use App\Domain\ValueObject\CandidateNumber;
 use App\Domain\ValueObject\Email;
 use App\Domain\ValueObject\Id;
 use App\Domain\ValueObject\RequestOrder;
@@ -36,6 +37,10 @@ class Candidate
      * @ORM\Column(type="string",name="candidate_group")
      */
     private $group;
+    /**
+     * @ORM\Column(type="integer",name="candidate_number", nullable=true)
+     */
+    private $candidateNumber;
     /**
      * @ORM\OneToMany(
      *     targetEntity="App\Domain\RequestedActivty",
@@ -125,6 +130,16 @@ class Candidate
     public function candidateGroup(): StringValueObject
     {
         return StringValueObject::fromString($this->group);
+    }
+
+    public function number(): ?CandidateNumber
+    {
+        return $this->candidateNumber ? CandidateNumber::fromInt($this->candidateNumber) : null;
+    }
+
+    public function assignNumber(CandidateNumber $number)
+    {
+        $this->candidateNumber = $number->value();
     }
 
 }

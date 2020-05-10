@@ -4,53 +4,35 @@ namespace App\Tests\UseCase\Context;
 
 use App\Domain\Activity;
 use App\Domain\ActivityRepository;
+use App\Domain\CandidateRepository;
+use App\Domain\RequestedActivty;
 use App\Domain\ValueObject\ActivityCode;
+use App\Domain\ValueObject\Email;
 use App\Domain\ValueObject\Id;
-use App\Infrastructure\Persistence\Doctrine\DoctrineActivityRepository;
-use App\Kernel;
-use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
-use Behat\Symfony2Extension\Context\KernelAwareContext;
-use Doctrine\Common\DataFixtures\Purger\ORMPurger;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Webmozart\Assert\Assert;
 
-class LoadCandidateRequestsFromCsvContext implements KernelAwareContext
+class LoadCandidateRequestsFromCsvContext extends BaseContext
 {
     /**
-     * @var Kernel
-     */
-    private $kernel;
-    /**
-     * @var DoctrineActivityRepository
+     * @var ActivityRepository
      */
     private $activityRepository;
-
     /**
-     * @BeforeScenario
+     * @var CandidateRepository
      */
-    public function cleanDB(BeforeScenarioScope $scope)
+    private $candidateRepository;
+
+    public function __construct(KernelInterface $kernel)
     {
-        $testContainer = $this->kernel->getContainer()->get('test.service_container');
-
-        $em = $testContainer->get(EntityManagerInterface::class);
-        $purger = new ORMPurger($em, []);
-
-        $purger->purge();
-
-        $this->activityRepository = $testContainer->get(ActivityRepository::class);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function setKernel(KernelInterface $kernel)
-    {
-        $this->kernel = $kernel;
+        parent::__construct($kernel);
+        $this->activityRepository = $this->testContainer->get(ActivityRepository::class);
+        $this->candidateRepository = $this->testContainer->get(CandidateRepository::class);
     }
 
     /**
@@ -86,6 +68,24 @@ class LoadCandidateRequestsFromCsvContext implements KernelAwareContext
         foreach ($table as $activity) {
             $this->activityRepository->save(new Activity(Id::next(), ActivityCode::fromString($activity['activity_code'])));
         }
+    }
+
+    /**
+     * @Then /^candidate of email "([^"]*)" has been registered with "([^"]*)" ordered requests$/
+     */
+    public function candidateOfEmailHasBeenRegisteredWithOrderedRequests($email, $requestedActivitiesCodes)
+    {
+        $candidate = $this->candidateRepository->findByEmail(Email::fromString($email));
+
+        Assert::notNull($candidate);
+
+        Assert::eq($requestedActivitiesCodes, implode(',', array_map(
+                function (RequestedActivty $requestedActivty) {
+                    return (string)$requestedActivty->code();
+                },
+                $candidate->requestedActivities()->toArray()
+            ))
+        );
     }
 
 }
