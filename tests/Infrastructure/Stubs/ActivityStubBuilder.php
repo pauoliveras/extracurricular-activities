@@ -24,6 +24,7 @@ class ActivityStubBuilder
         $this->id = StubId::random();
         $this->activityCode = StubActivityCode::random();
         $this->capacity = StubCapacity::random();
+        $this->participants = [];
     }
 
     public static function create()
@@ -34,6 +35,10 @@ class ActivityStubBuilder
     public function build(): Activity
     {
         $activity = Activity::create($this->id, $this->activityCode, $this->capacity);
+
+        foreach ($this->participants as $participant) {
+            $activity->enroll($participant->email(), $participant->name(), $participant->number());
+        }
 
         $this->reset();
 
@@ -50,6 +55,13 @@ class ActivityStubBuilder
     public function withParticipants(array $participants)
     {
         $this->participants = $participants;
+
+        return $this;
+    }
+
+    public function withCode(ActivityCode $activityCode)
+    {
+        $this->activityCode = $activityCode;
 
         return $this;
     }

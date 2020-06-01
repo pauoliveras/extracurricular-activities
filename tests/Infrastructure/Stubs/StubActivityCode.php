@@ -13,4 +13,9 @@ class StubActivityCode
 
         return ActivityCode::fromString($faker->word);
     }
+
+    public static function create(string $code)
+    {
+        return ActivityCode::fromString($code);
+    }
 }

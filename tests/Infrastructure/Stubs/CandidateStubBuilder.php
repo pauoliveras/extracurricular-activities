@@ -4,6 +4,8 @@ namespace App\Tests\Infrastructure\Stubs;
 
 use App\Domain\Candidate;
 use App\Domain\ValueObject\CandidateNumber;
+use App\Domain\ValueObject\Email;
+use App\Domain\ValueObject\StringValueObject;
 
 class CandidateStubBuilder
 {
@@ -27,6 +29,11 @@ class CandidateStubBuilder
         $this->candidateGroup = StubCandidateGroup::random();
         $this->requestedActivitiesList = StubRequestedActivitiesList::random();
         $this->candidateNumber = null;
+    }
+
+    public static function create()
+    {
+        return new self();
     }
 
     public function build(): Candidate
@@ -58,6 +65,27 @@ class CandidateStubBuilder
     public function withNumber(CandidateNumber $candidateNumber)
     {
         $this->candidateNumber = $candidateNumber;
+
+        return $this;
+    }
+
+    public function withActivities(array $activities)
+    {
+        $this->requestedActivitiesList = StubRequestedActivitiesList::create($activities);
+
+        return $this;
+    }
+
+    public function withName(StringValueObject $candidateName)
+    {
+        $this->candidateName = $candidateName;
+
+        return $this;
+    }
+
+    public function withEmail(Email $email)
+    {
+        $this->email = $email;
 
         return $this;
     }

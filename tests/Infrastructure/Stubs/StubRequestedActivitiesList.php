@@ -12,12 +12,21 @@ class StubRequestedActivitiesList
     public static function randomWith(array $activities)
     {
         $faker = Factory::create();
-        return RequestedActivitiesList::createFromArray($faker->randomElements($activities, rand(1, count($activities))));
+        return RequestedActivitiesList::createFromArray(
+            $faker->randomElements($activities, rand(1, count($activities)))
+        );
     }
 
     public static function random()
     {
         $faker = Factory::create();
-        return RequestedActivitiesList::createFromArray($faker->randomElements(self::DEFAULT_ACTIVITIES, rand(1, count(self::DEFAULT_ACTIVITIES))));
+        return RequestedActivitiesList::createFromArray(
+            $faker->randomElements(self::DEFAULT_ACTIVITIES, rand(1, count(self::DEFAULT_ACTIVITIES)))
+        );
+    }
+
+    public static function create(array $activities)
+    {
+        return RequestedActivitiesList::createFromArray($activities);
     }
 }
