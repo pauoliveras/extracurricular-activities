@@ -5,6 +5,7 @@ namespace App\Domain;
 use App\Domain\Exception\DuplicateParticipantEnrollmentException;
 use App\Domain\Exception\ParticipantEnrollmentClosedException;
 use App\Domain\ValueObject\ActivityCode;
+use App\Domain\ValueObject\CandidateNumber;
 use App\Domain\ValueObject\Capacity;
 use App\Domain\ValueObject\Email;
 use App\Domain\ValueObject\Id;
@@ -65,12 +66,12 @@ class Activity
         return false;
     }
 
-    public function enroll(Email $email, StringValueObject $participantName)
+    public function enroll(Email $email, StringValueObject $participantName, CandidateNumber $candidateNumber)
     {
         if ($this->capacity <= $this->participants->count()) {
             throw ParticipantEnrollmentClosedException::ofActivity(ActivityCode::fromString($this->code));
         }
-        $participant = new Participant(Id::next(), $this, $email, $participantName);
+        $participant = new Participant(Id::next(), $this, $email, $participantName, $candidateNumber);
         $this->assertParticipantNotAlreadyEnrolled($participantName);
         $this->participants->add($participant);
     }
@@ -91,5 +92,10 @@ class Activity
         ) {
             throw DuplicateParticipantEnrollmentException::ofParticipant($participantName, ActivityCode::fromString($this->code));
         }
+    }
+
+    public function code(): ActivityCode
+    {
+        return ActivityCode::fromString($this->code);
     }
 }

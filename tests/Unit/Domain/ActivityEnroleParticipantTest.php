@@ -5,6 +5,7 @@ namespace App\Tests\Unit\Domain;
 use App\Domain\Activity;
 use App\Domain\Exception\DuplicateParticipantEnrollmentException;
 use App\Domain\Exception\ParticipantEnrollmentClosedException;
+use App\Domain\ValueObject\CandidateNumber;
 use App\Domain\ValueObject\Capacity;
 use App\Domain\ValueObject\Email;
 use App\Domain\ValueObject\StringValueObject;
@@ -26,7 +27,8 @@ class ActivityEnroleParticipantTest extends TestCase
 
         $activity->enroll(
             Email::fromString('participant@email.com'),
-            StringValueObject::fromString('Participant name')
+            StringValueObject::fromString('Participant name'),
+            CandidateNumber::fromInt(1)
         );
 
         $this->addToAssertionCount(1);
@@ -43,7 +45,8 @@ class ActivityEnroleParticipantTest extends TestCase
         $this->assertCount(0, $activity->participants());
         $activity->enroll(
             Email::fromString('participant@email.com'),
-            StringValueObject::fromString('Participant name')
+            StringValueObject::fromString('Participant name'),
+            CandidateNumber::fromInt(1)
         );
 
         $this->assertCount(1, $activity->participants());
@@ -59,14 +62,16 @@ class ActivityEnroleParticipantTest extends TestCase
 
         $activity->enroll(
             Email::fromString('participant1@email.com'),
-            StringValueObject::fromString('Participant 1 name')
+            StringValueObject::fromString('Participant 1 name'),
+            CandidateNumber::fromInt(1)
         );
 
         $this->expectException(DuplicateParticipantEnrollmentException::class);
 
         $activity->enroll(
             Email::fromString('participant1@email.com'),
-            StringValueObject::fromString('Participant 1 name')
+            StringValueObject::fromString('Participant 1 name'),
+            CandidateNumber::fromInt(1)
         );
     }
 
@@ -80,14 +85,16 @@ class ActivityEnroleParticipantTest extends TestCase
 
         $activity->enroll(
             Email::fromString('participant1@email.com'),
-            StringValueObject::fromString('Participant 1 name')
+            StringValueObject::fromString('Participant 1 name'),
+            CandidateNumber::fromInt(1)
         );
 
         $this->expectException(ParticipantEnrollmentClosedException::class);
 
         $activity->enroll(
             Email::fromString('participant2@email.com'),
-            StringValueObject::fromString('Participant 2 name')
+            StringValueObject::fromString('Participant 2 name'),
+            CandidateNumber::fromInt(2)
         );
     }
 }

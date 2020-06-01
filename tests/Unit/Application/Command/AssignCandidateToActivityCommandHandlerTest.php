@@ -7,6 +7,7 @@ use App\Application\Command\AssignCandidateToActivityCommand;
 use App\Domain\ActivityRepository;
 use App\Domain\NullActivity;
 use App\Domain\ValueObject\ActivityCode;
+use App\Domain\ValueObject\CandidateNumber;
 use App\Domain\ValueObject\Capacity;
 use App\Domain\ValueObject\Email;
 use App\Domain\ValueObject\StringValueObject;
@@ -26,7 +27,8 @@ class AssignCandidateToActivityCommandHandlerTest extends TestCase
         $command = new AssignCandidateToActivityCommand(
             ActivityCode::fromString('non-existing-activity')->value(),
             Email::fromString('candidate_email@email.com')->value(),
-            StringValueObject::fromString('Candidate name')->value()
+            StringValueObject::fromString('Candidate name')->value(),
+            CandidateNumber::fromInt(1)->value()
         );
         $this->expectException(InvalidArgumentException::class);
 
@@ -47,7 +49,8 @@ class AssignCandidateToActivityCommandHandlerTest extends TestCase
         $command = new AssignCandidateToActivityCommand(
             ActivityCode::fromString('existing-activity')->value(),
             Email::fromString('candidate_email@email.com')->value(),
-            StringValueObject::fromString('Candidate name')->value()
+            StringValueObject::fromString('Candidate name')->value(),
+            CandidateNumber::fromInt(1)->value()
         );
 
         $this->assignCandidateToActivityCommandHandler->__invoke($command);
