@@ -20,7 +20,7 @@ services:
     exclude: '../src/{DependencyInjection,Migrations,Application,Tests,Kernel.php}'
   App\Application\:
     resource: '../src/Application/*'
-    exclude: '../src/Application/Command'
+    exclude: '../src/Application/{Command,Query}'
     public: true
     #exclude: '../src/{DependencyInjection,Domain,Migrations,Tests,Application/Command,Kernel.php}'
   #App\Domain\CandidateRepository: '@App\Infrastructure\Persistence\Doctrine\DoctrineCandidateRepository'

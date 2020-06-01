@@ -9,6 +9,7 @@ use App\Domain\RequestedActivty;
 use App\Domain\ValueObject\ActivityCode;
 use App\Domain\ValueObject\Email;
 use App\Domain\ValueObject\Id;
+use App\Tests\Infrastructure\Stubs\StubCapacity;
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
@@ -55,9 +56,7 @@ class LoadCandidateRequestsFromCsvContext extends BaseContext
 
         $command = $application->find('app:load-requests');
         $commandTester = new CommandTester($command);
-        $commandTester->execute([
-            'filename' => $filename,
-        ]);
+        $commandTester->execute(['filename' => $filename]);
     }
 
     /**
@@ -66,7 +65,13 @@ class LoadCandidateRequestsFromCsvContext extends BaseContext
     public function followingActivitiesAreAvailableToRequest(TableNode $table)
     {
         foreach ($table as $activity) {
-            $this->activityRepository->save(new Activity(Id::next(), ActivityCode::fromString($activity['activity_code'])));
+            $this->activityRepository->save(
+                new Activity(
+                    Id::next(),
+                    ActivityCode::fromString($activity['activity_code']),
+                    StubCapacity::random()
+                )
+            );
         }
     }
 

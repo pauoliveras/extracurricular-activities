@@ -12,6 +12,7 @@ use App\Domain\ValueObject\ActivityCode;
 use App\Domain\ValueObject\Email;
 use App\Domain\ValueObject\Id;
 use App\Tests\Infrastructure\Stubs\InMemoryCandidateRepository;
+use App\Tests\Infrastructure\Stubs\StubCapacity;
 use InvalidArgumentException;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -47,9 +48,9 @@ class RequestActivitiesCommandHandlerTest extends TestCase
         );
 
         $this->activityRepository->method('findByCode')->willReturnOnConsecutiveCalls(
-            new Activity(Id::next(), ActivityCode::fromString('activity_1')),
-            new Activity(Id::next(), ActivityCode::fromString('activity_2')),
-            new Activity(Id::next(), ActivityCode::fromString('activity_3'))
+            new Activity(Id::next(), ActivityCode::fromString('activity_1'), StubCapacity::random()),
+            new Activity(Id::next(), ActivityCode::fromString('activity_2'), StubCapacity::random()),
+            new Activity(Id::next(), ActivityCode::fromString('activity_3'), StubCapacity::random())
         );
 
         $this->requestActivitiesCommandHandler->__invoke($command);
@@ -62,7 +63,7 @@ class RequestActivitiesCommandHandlerTest extends TestCase
     {
         $this->activityRepository->method('findByCode')
             ->with(ActivityCode::fromString('non_existing_activity'))
-            ->willReturn(NullActivity::create());
+            ->willReturn(NullActivity::createNull());
 
         $this->expectException(InvalidArgumentException::class);
 

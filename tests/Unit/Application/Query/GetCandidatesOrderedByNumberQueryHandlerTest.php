@@ -2,8 +2,8 @@
 
 namespace App\Tests\Unit\Application\Query;
 
+use App\Application\GetCandidatesOrderedByNumberQueryHandler;
 use App\Application\Query\GetCandidatesOrderedByNumberQuery;
-use App\Application\Query\GetCandidatesOrderedByNumberQueryHandler;
 use App\Domain\Candidate;
 use App\Domain\CandidateCollection;
 use App\Domain\ValueObject\CandidateNumber;
@@ -20,7 +20,7 @@ class GetCandidatesOrderedByNumberQueryHandlerTest extends TestCase
 
     public function test_when_no_candidates_empty_collection_is_returned()
     {
-        $query = new GetCandidatesOrderedByNumberQuery(LuckyDrawNumber::fromInt(rand(1, 10)));
+        $query = new GetCandidatesOrderedByNumberQuery(LuckyDrawNumber::fromInt(rand(1, 10))->value());
 
         $orderedCandidates = $this->queryHandler->__invoke($query);
 
@@ -30,7 +30,7 @@ class GetCandidatesOrderedByNumberQueryHandlerTest extends TestCase
     public function test_number_can_not_be_greater_than_number_of_candidates()
     {
         $this->givenThereAreNCandidates(10);
-        $query = new GetCandidatesOrderedByNumberQuery(LuckyDrawNumber::fromInt(11));
+        $query = new GetCandidatesOrderedByNumberQuery(LuckyDrawNumber::fromInt(11)->value());
 
         $this->expectException(InvalidArgumentException::class);
 
@@ -54,7 +54,7 @@ class GetCandidatesOrderedByNumberQueryHandlerTest extends TestCase
     public function test_candidate_are_returned_in_order_starting_at_number_one()
     {
         $this->givenThereAreNCandidates(10);
-        $query = new GetCandidatesOrderedByNumberQuery(LuckyDrawNumber::fromInt(1));
+        $query = new GetCandidatesOrderedByNumberQuery(LuckyDrawNumber::fromInt(1)->value());
 
         $orderedCandidates = $this->queryHandler->__invoke($query);
 
@@ -81,7 +81,7 @@ class GetCandidatesOrderedByNumberQueryHandlerTest extends TestCase
     public function test_candidate_are_returned_in_order_starting_at_last_candidate_number()
     {
         $this->givenThereAreNCandidates(10);
-        $query = new GetCandidatesOrderedByNumberQuery(LuckyDrawNumber::fromInt(10));
+        $query = new GetCandidatesOrderedByNumberQuery(LuckyDrawNumber::fromInt(10)->value());
 
         $orderedCandidates = $this->queryHandler->__invoke($query);
 

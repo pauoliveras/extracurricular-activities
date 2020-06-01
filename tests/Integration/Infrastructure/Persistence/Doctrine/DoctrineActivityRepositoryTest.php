@@ -3,9 +3,12 @@
 namespace App\Tests\Integration\Infrastructure\Persistence\Doctrine;
 
 use App\Domain\Activity;
-use App\Domain\ValueObject\ActivityCode;
 use App\Domain\ValueObject\Id;
 use App\Infrastructure\Persistence\Doctrine\DoctrineActivityRepository;
+use App\Tests\Infrastructure\Stubs\StubActivityCode;
+use App\Tests\Infrastructure\Stubs\StubCapacity;
+use App\Tests\Infrastructure\Stubs\StubEmail;
+use App\Tests\Infrastructure\Stubs\StubParticipantName;
 use App\Tests\Integration\BaseKernelTestCase;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -19,8 +22,11 @@ class DoctrineActivityRepositoryTest extends BaseKernelTestCase
         $activityId = Id::next();
         $activity = new Activity(
             $activityId,
-            ActivityCode::fromString('activity')
+            StubActivityCode::random(),
+            StubCapacity::random()
         );
+
+        $activity->enroll(StubEmail::random(), StubParticipantName::random());
 
         $this->repository->save($activity);
 

@@ -8,9 +8,9 @@ class GetCandidatesOrderedByNumberQuery
 {
     private int $number;
 
-    public function __construct(LuckyDrawNumber $number)
+    public function __construct(int $number)
     {
-        $this->number = $number->value();
+        $this->number = $number;
     }
 
     public function number(): LuckyDrawNumber

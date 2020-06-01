@@ -4,7 +4,6 @@ namespace App\Tests\Infrastructure\Stubs;
 
 use App\Domain\Candidate;
 use App\Domain\ValueObject\CandidateNumber;
-use App\Tests\Infrastructure\Service\ReflectionEntityManager;
 
 class CandidateStubBuilder
 {
@@ -32,19 +31,18 @@ class CandidateStubBuilder
 
     public function build(): Candidate
     {
-        $reflectionEntityManager = new ReflectionEntityManager();
-
-        $candidate = $reflectionEntityManager->buildObject(
-            Candidate::class,
-            [
-                'id' => $this->id,
-                'email' => $this->email->value(),
-                'candidateName' => $this->candidateName->value(),
-                'group' => $this->candidateGroup->value(),
-                'requestedActivities' => $this->requestedActivitiesList,
-                'candidateNumber' => $this->candidateNumber ? $this->candidateNumber->value() : null
-            ]
+        $candidate = new Candidate(
+            $this->id,
+            $this->email,
+            $this->candidateName,
+            $this->candidateGroup,
+            $this->requestedActivitiesList
         );
+
+        if ($this->candidateNumber) {
+            $candidate->assignNumber($this->candidateNumber);
+        }
+
         $this->reset();
 
         return $candidate;

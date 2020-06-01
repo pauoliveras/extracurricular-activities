@@ -25,7 +25,7 @@ class DoctrineActivityRepository implements ActivityRepository
     {
         $activity = $this->repository->findOneBy(['code' => $code->value()]);
 
-        return $activity ?? NullActivity::create();
+        return $activity ?? NullActivity::createNull();
     }
 
     public function ofId(Id $id): Activity

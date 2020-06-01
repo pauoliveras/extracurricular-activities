@@ -25,4 +25,9 @@ class StringValueObject
     {
         return $this->value;
     }
+
+    public function equals(StringValueObject $other)
+    {
+        return $this->value === $other->value;
+    }
 }

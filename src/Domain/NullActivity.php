@@ -8,7 +8,7 @@ class NullActivity extends Activity
     {
     }
 
-    public static function create(): self
+    public static function createNull(): self
     {
         return new self();
     }

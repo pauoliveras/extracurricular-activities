@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Application\Query;
+namespace App\Application;
 
+use App\Application\Query\GetCandidatesOrderedByNumberQuery;
 use App\Domain\Candidate;
 use App\Domain\CandidateCollection;
 use App\Domain\CandidateRepository;
