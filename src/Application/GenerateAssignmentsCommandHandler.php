@@ -7,6 +7,7 @@ use App\Application\Command\GenerateAssignmentsCommand;
 use App\Application\Query\GetCandidatesOrderedByNumberQuery;
 use App\Domain\Exception\ParticipantEnrollmentClosedException;
 use App\Domain\RequestedActivity;
+use App\Domain\ValueObject\SequenceNumber;
 
 class GenerateAssignmentsCommandHandler
 {
@@ -40,7 +41,7 @@ class GenerateAssignmentsCommandHandler
                 );
             $this->totalRequestCount += count($candidate->requestedActivities()->toArray());
         }
-
+        $sequenceNumber = SequenceNumber::initial();
         while ($this->processedRequests < $this->totalRequestCount) {
             foreach ($candidates as $candidate) {
                 foreach ($this->candidateRequests[$candidate->number()->value()] as $activityCode => $requestedActivity) {
@@ -53,9 +54,11 @@ class GenerateAssignmentsCommandHandler
                                 $requestedActivity->code(),
                                 $candidate->email()->value(),
                                 $candidate->candidateName()->value(),
-                                $candidate->number()->value()
+                                $candidate->number()->value(),
+                                $sequenceNumber->value()
                             )
                         );
+                        $sequenceNumber = $sequenceNumber->next();
                         continue 2;
                     } catch (ParticipantEnrollmentClosedException $exception) {
                         continue;

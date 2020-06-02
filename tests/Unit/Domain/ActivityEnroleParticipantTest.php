@@ -8,6 +8,7 @@ use App\Domain\Exception\ParticipantEnrollmentClosedException;
 use App\Domain\ValueObject\CandidateNumber;
 use App\Domain\ValueObject\Capacity;
 use App\Domain\ValueObject\Email;
+use App\Domain\ValueObject\SequenceNumber;
 use App\Domain\ValueObject\StringValueObject;
 use App\Tests\Infrastructure\Stubs\StubActivityCode;
 use App\Tests\Infrastructure\Stubs\StubId;
@@ -28,7 +29,8 @@ class ActivityEnroleParticipantTest extends TestCase
         $activity->enroll(
             Email::fromString('participant@email.com'),
             StringValueObject::fromString('Participant name'),
-            CandidateNumber::fromInt(1)
+            CandidateNumber::fromInt(1),
+            SequenceNumber::initial()
         );
 
         $this->addToAssertionCount(1);
@@ -46,7 +48,8 @@ class ActivityEnroleParticipantTest extends TestCase
         $activity->enroll(
             Email::fromString('participant@email.com'),
             StringValueObject::fromString('Participant name'),
-            CandidateNumber::fromInt(1)
+            CandidateNumber::fromInt(1),
+            SequenceNumber::initial()
         );
 
         $this->assertCount(1, $activity->participants());
@@ -63,7 +66,8 @@ class ActivityEnroleParticipantTest extends TestCase
         $activity->enroll(
             Email::fromString('participant1@email.com'),
             StringValueObject::fromString('Participant 1 name'),
-            CandidateNumber::fromInt(1)
+            CandidateNumber::fromInt(1),
+            SequenceNumber::initial()
         );
 
         $this->expectException(DuplicateParticipantEnrollmentException::class);
@@ -71,7 +75,8 @@ class ActivityEnroleParticipantTest extends TestCase
         $activity->enroll(
             Email::fromString('participant1@email.com'),
             StringValueObject::fromString('Participant 1 name'),
-            CandidateNumber::fromInt(1)
+            CandidateNumber::fromInt(1),
+            SequenceNumber::initial()
         );
     }
 
@@ -86,7 +91,8 @@ class ActivityEnroleParticipantTest extends TestCase
         $activity->enroll(
             Email::fromString('participant1@email.com'),
             StringValueObject::fromString('Participant 1 name'),
-            CandidateNumber::fromInt(1)
+            CandidateNumber::fromInt(1),
+            SequenceNumber::initial()
         );
 
         $this->expectException(ParticipantEnrollmentClosedException::class);
@@ -94,7 +100,8 @@ class ActivityEnroleParticipantTest extends TestCase
         $activity->enroll(
             Email::fromString('participant2@email.com'),
             StringValueObject::fromString('Participant 2 name'),
-            CandidateNumber::fromInt(2)
+            CandidateNumber::fromInt(2),
+            SequenceNumber::initial()
         );
     }
 }

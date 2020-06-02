@@ -5,6 +5,7 @@ namespace App\Domain;
 use App\Domain\ValueObject\CandidateNumber;
 use App\Domain\ValueObject\Email;
 use App\Domain\ValueObject\Id;
+use App\Domain\ValueObject\SequenceNumber;
 use App\Domain\ValueObject\StringValueObject;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -30,19 +31,24 @@ class Participant
      * @ORM\Column(type="integer")
      */
     private int $candidateNumber;
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private int $sequenceNumber;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Domain\Activity", fetch="EAGER")
      */
     private Activity $activity;
 
-    public function __construct(Id $id, Activity $activity, Email $email, StringValueObject $participantName, CandidateNumber $candidateNumber)
+    public function __construct(Id $id, Activity $activity, Email $email, StringValueObject $participantName, CandidateNumber $candidateNumber, SequenceNumber $sequenceNumber)
     {
         $this->id = $id;
         $this->email = $email->value();
         $this->participantName = $participantName->value();
         $this->activity = $activity;
         $this->candidateNumber = $candidateNumber->value();
+        $this->sequenceNumber = $sequenceNumber->value();
     }
 
     public function email(): Email

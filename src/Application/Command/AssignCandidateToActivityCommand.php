@@ -5,6 +5,7 @@ namespace App\Application\Command;
 use App\Domain\ValueObject\ActivityCode;
 use App\Domain\ValueObject\CandidateNumber;
 use App\Domain\ValueObject\Email;
+use App\Domain\ValueObject\SequenceNumber;
 use App\Domain\ValueObject\StringValueObject;
 
 class AssignCandidateToActivityCommand
@@ -13,13 +14,15 @@ class AssignCandidateToActivityCommand
     private string $candidateEmail;
     private string $candidateName;
     private int $candidateNumber;
+    private int $sequenceNumber;
 
-    public function __construct(string $activityCode, string $candidateEmail, string $candidateName, int $candidateNumber)
+    public function __construct(string $activityCode, string $candidateEmail, string $candidateName, int $candidateNumber, int $sequenceNumber)
     {
         $this->activityCode = $activityCode;
         $this->candidateEmail = $candidateEmail;
         $this->candidateName = $candidateName;
         $this->candidateNumber = $candidateNumber;
+        $this->sequenceNumber = $sequenceNumber;
     }
 
     public function activityCode(): ActivityCode
@@ -40,6 +43,11 @@ class AssignCandidateToActivityCommand
     public function candidateNumber(): CandidateNumber
     {
         return CandidateNumber::fromInt($this->candidateNumber);
+    }
+
+    public function sequenceNumber(): SequenceNumber
+    {
+        return SequenceNumber::fromInt($this->sequenceNumber);
     }
 
 }

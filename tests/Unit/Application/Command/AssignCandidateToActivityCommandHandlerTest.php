@@ -10,6 +10,7 @@ use App\Domain\ValueObject\ActivityCode;
 use App\Domain\ValueObject\CandidateNumber;
 use App\Domain\ValueObject\Capacity;
 use App\Domain\ValueObject\Email;
+use App\Domain\ValueObject\SequenceNumber;
 use App\Domain\ValueObject\StringValueObject;
 use App\Tests\Infrastructure\Stubs\ActivityStubBuilder;
 use InvalidArgumentException;
@@ -28,7 +29,8 @@ class AssignCandidateToActivityCommandHandlerTest extends TestCase
             ActivityCode::fromString('non-existing-activity')->value(),
             Email::fromString('candidate_email@email.com')->value(),
             StringValueObject::fromString('Candidate name')->value(),
-            CandidateNumber::fromInt(1)->value()
+            CandidateNumber::fromInt(1)->value(),
+            SequenceNumber::initial()->value()
         );
         $this->expectException(InvalidArgumentException::class);
 
@@ -50,7 +52,8 @@ class AssignCandidateToActivityCommandHandlerTest extends TestCase
             ActivityCode::fromString('existing-activity')->value(),
             Email::fromString('candidate_email@email.com')->value(),
             StringValueObject::fromString('Candidate name')->value(),
-            CandidateNumber::fromInt(1)->value()
+            CandidateNumber::fromInt(1)->value(),
+            SequenceNumber::initial()->value()
         );
 
         $this->assignCandidateToActivityCommandHandler->__invoke($command);

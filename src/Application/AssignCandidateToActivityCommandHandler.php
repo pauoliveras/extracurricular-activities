@@ -22,7 +22,7 @@ class AssignCandidateToActivityCommandHandler
             throw new InvalidArgumentException(sprintf('Activity of code %s does not exist', $command->activityCode()->value()));
         }
 
-        $activity->enroll($command->candidateEmail(), $command->candidateName(), $command->candidateNumber());
+        $activity->enroll($command->candidateEmail(), $command->candidateName(), $command->candidateNumber(), $command->sequenceNumber());
 
         $this->activityRepository->save($activity);
     }

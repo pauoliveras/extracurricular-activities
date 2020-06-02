@@ -9,6 +9,7 @@ use App\Domain\ValueObject\CandidateNumber;
 use App\Domain\ValueObject\Capacity;
 use App\Domain\ValueObject\Email;
 use App\Domain\ValueObject\Id;
+use App\Domain\ValueObject\SequenceNumber;
 use App\Domain\ValueObject\StringValueObject;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -66,12 +67,12 @@ class Activity
         return false;
     }
 
-    public function enroll(Email $email, StringValueObject $participantName, CandidateNumber $candidateNumber)
+    public function enroll(Email $email, StringValueObject $participantName, CandidateNumber $candidateNumber, SequenceNumber $sequenceNumber)
     {
         if ($this->capacity <= $this->participants->count()) {
             throw ParticipantEnrollmentClosedException::ofActivity(ActivityCode::fromString($this->code));
         }
-        $participant = new Participant(Id::next(), $this, $email, $participantName, $candidateNumber);
+        $participant = new Participant(Id::next(), $this, $email, $participantName, $candidateNumber, $sequenceNumber);
         $this->assertParticipantNotAlreadyEnrolled($participantName);
         $this->participants->add($participant);
     }
