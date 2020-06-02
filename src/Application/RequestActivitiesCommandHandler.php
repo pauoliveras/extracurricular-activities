@@ -9,6 +9,7 @@ use App\Domain\Candidate;
 use App\Domain\CandidateRepository;
 use App\Domain\Exception\DuplicateCandidateRequestException;
 use App\Domain\RequestedActivitiesList;
+use App\Domain\ValueObject\CandidateCode;
 use App\Domain\ValueObject\Email;
 use App\Domain\ValueObject\StringValueObject;
 use InvalidArgumentException;
@@ -40,6 +41,7 @@ class RequestActivitiesCommandHandler
 
         $candidate = new Candidate(
             $this->candidateRepository->nextId(),
+            CandidateCode::fromString($command->candidateCode()),
             Email::fromString($command->email()),
             StringValueObject::fromString($command->candidateName()),
             StringValueObject::fromString($command->group()),
@@ -63,10 +65,10 @@ class RequestActivitiesCommandHandler
 
     protected function checkCandidateHasntPlacedAnyRequest(RequestActivitiesCommand $command)
     {
-        $candidate = $this->candidateRepository->findByEmail(Email::fromString($command->email()));
+        $candidate = $this->candidateRepository->findByCode(CandidateCode::fromString($command->candidateCode()));
 
         if (!$candidate->isNull()) {
-            throw DuplicateCandidateRequestException::candidate(Email::fromString($command->email()));
+            throw DuplicateCandidateRequestException::candidate(CandidateCode::fromString($command->candidateCode()));
         }
     }
 

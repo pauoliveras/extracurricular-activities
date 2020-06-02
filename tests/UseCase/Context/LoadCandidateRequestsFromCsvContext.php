@@ -5,9 +5,9 @@ namespace App\Tests\UseCase\Context;
 use App\Domain\Activity;
 use App\Domain\ActivityRepository;
 use App\Domain\CandidateRepository;
-use App\Domain\RequestedActivty;
+use App\Domain\RequestedActivity;
 use App\Domain\ValueObject\ActivityCode;
-use App\Domain\ValueObject\Email;
+use App\Domain\ValueObject\CandidateCode;
 use App\Domain\ValueObject\Id;
 use App\Tests\Infrastructure\Stubs\StubCapacity;
 use Behat\Gherkin\Node\PyStringNode;
@@ -76,16 +76,16 @@ class LoadCandidateRequestsFromCsvContext extends BaseContext
     }
 
     /**
-     * @Then /^candidate of email "([^"]*)" has been registered with "([^"]*)" ordered requests$/
+     * @Then /^candidate "([^"]*)" has been registered with "([^"]*)" ordered requests$/
      */
-    public function candidateOfEmailHasBeenRegisteredWithOrderedRequests($email, $requestedActivitiesCodes)
+    public function candidateHasBeenRegisteredWithOrderedRequests($candidateCode, $requestedActivitiesCodes)
     {
-        $candidate = $this->candidateRepository->findByEmail(Email::fromString($email));
+        $candidate = $this->candidateRepository->findByCode(CandidateCode::fromString($candidateCode));
 
         Assert::notNull($candidate);
 
         Assert::eq($requestedActivitiesCodes, implode(',', array_map(
-                function (RequestedActivty $requestedActivty) {
+                function (RequestedActivity $requestedActivty) {
                     return (string)$requestedActivty->code();
                 },
                 $candidate->requestedActivities()->toArray()

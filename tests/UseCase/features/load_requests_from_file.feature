@@ -8,7 +8,7 @@ Feature: Load requests from file
     """
     email;candidate;group;option1;option2;option3;option4;option5
     user1@gmail.com;candidate 1;group 1;piscina;anglès;ioga;dansa;circ
-    user2@gmail.com;candidate 2;group 2;ioga;anglès;piscina;circ
+    user1@gmail.com;candidate 2;group 2;ioga;anglès;piscina;circ
     user3@gmail.com;candidate 3;group 1;circ;ioga;dansa;piscina;anglès
     user4@gmail.com;candidate 4;group 2;ioga;dansa;circ
     """
@@ -21,7 +21,7 @@ Feature: Load requests from file
       | circ          |
 
     When load requests command is executed against file "var/data/tests/requests.csv"
-    Then candidate of email "user1@gmail.com" has been registered with "piscina,anglès,ioga,dansa,circ" ordered requests
-    Then candidate of email "user2@gmail.com" has been registered with "ioga,anglès,piscina,circ" ordered requests
-    Then candidate of email "user3@gmail.com" has been registered with "circ,ioga,dansa,piscina,anglès" ordered requests
-    Then candidate of email "user4@gmail.com" has been registered with "ioga,dansa,circ" ordered requests
+    Then candidate "candidate 1|group 1" has been registered with "piscina,anglès,ioga,dansa,circ" ordered requests
+    Then candidate "candidate 2|group 2" has been registered with "ioga,anglès,piscina,circ" ordered requests
+    Then candidate "candidate 3|group 1" has been registered with "circ,ioga,dansa,piscina,anglès" ordered requests
+    Then candidate "candidate 4|group 2" has been registered with "ioga,dansa,circ" ordered requests

@@ -6,7 +6,7 @@ use App\Domain\Candidate;
 use App\Domain\CandidateCollection;
 use App\Domain\CandidateRepository;
 use App\Domain\NullCandidate;
-use App\Domain\ValueObject\Email;
+use App\Domain\ValueObject\CandidateCode;
 use App\Domain\ValueObject\Id;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -27,9 +27,9 @@ class DoctrineCandidateRepository implements CandidateRepository
         $this->entityManager->flush();
     }
 
-    public function findByEmail(Email $email): Candidate
+    public function findByCode(CandidateCode $code): Candidate
     {
-        $candidate = $this->repository->findOneBy(['email' => $email]);
+        $candidate = $this->repository->findOneBy(['code' => $code]);
 
         return $candidate ?? NullCandidate::create();
     }

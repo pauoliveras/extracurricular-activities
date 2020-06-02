@@ -5,21 +5,25 @@ namespace App\Tests\Integration\Infrastructure\Persistence\Doctrine;
 use App\Domain\Candidate;
 use App\Domain\CandidateRepository;
 use App\Domain\RequestedActivitiesList;
+use App\Domain\ValueObject\CandidateCode;
 use App\Domain\ValueObject\Email;
 use App\Domain\ValueObject\Id;
 use App\Domain\ValueObject\StringValueObject;
+use App\Infrastructure\Persistence\Doctrine\DoctrineCandidateRepository;
 use App\Tests\Integration\BaseKernelTestCase;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 
 class DoctrineCandidateRepositoryTest extends BaseKernelTestCase
 {
-    private $repository;
-    private $em;
+    private DoctrineCandidateRepository $repository;
+    private EntityManager $em;
 
     public function test_candidate_can_be_saved_and_retrieved()
     {
         $candidate = new Candidate(
             Id::next(),
+            CandidateCode::fromString('code'),
             Email::fromString('test@email.com'),
             StringValueObject::fromString('candidate name'),
             StringValueObject::fromString('group'),
@@ -30,14 +34,14 @@ class DoctrineCandidateRepositoryTest extends BaseKernelTestCase
 
         $this->em->clear();
 
-        $savedCandidate = $this->repository->findByEmail(Email::fromString('test@email.com'));
+        $savedCandidate = $this->repository->findByCode(CandidateCode::fromString('code'));
 
         $this->assertEquals($candidate->email(), $savedCandidate->email());
         $this->assertEquals($candidate->candidateName(), $savedCandidate->candidateName());
+        $this->assertEquals($candidate->candidateCode(), $savedCandidate->candidateCode());
         $this->assertEquals($candidate->candidateGroup(), $savedCandidate->candidateGroup());
         $this->assertEquals($candidate->requestedActivities(), $savedCandidate->requestedActivities());
     }
-
     protected function setUp(): void
     {
         parent::setup();

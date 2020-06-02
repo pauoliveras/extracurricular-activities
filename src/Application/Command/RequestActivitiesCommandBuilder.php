@@ -11,6 +11,7 @@ class RequestActivitiesCommandBuilder
      * @var array
      */
     private $orderedOtions;
+    private ?string $code = null;
 
     public function __construct()
     {
@@ -37,6 +38,13 @@ class RequestActivitiesCommandBuilder
         return $this;
     }
 
+    public function withCode(string $code): self
+    {
+        $this->code = $code;
+
+        return $this;
+    }
+
     public function withOption(string $option): self
     {
         if (!empty($option)) {
@@ -48,6 +56,11 @@ class RequestActivitiesCommandBuilder
 
     public function build(): RequestActivitiesCommand
     {
-        return new RequestActivitiesCommand($this->email, $this->candidateName, $this->group, $this->orderedOtions);
+        return new RequestActivitiesCommand($this->code ?? $this->defaultCode(), $this->email, $this->candidateName, $this->group, $this->orderedOtions);
+    }
+
+    private function defaultCode()
+    {
+        return sprintf('%s|%s', $this->candidateName, $this->group);
     }
 }

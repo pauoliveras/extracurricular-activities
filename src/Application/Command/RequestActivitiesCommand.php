@@ -4,13 +4,15 @@ namespace App\Application\Command;
 
 class RequestActivitiesCommand
 {
-    private $email;
-    private $candidateName;
-    private $group;
-    private $orderedOtions = [];
+    private string $email;
+    private string $candidateName;
+    private string $group;
+    private array $orderedOtions = [];
+    private string $candidateCode;
 
-    public function __construct(string $email, string $candidateName, string $group, array $orderedOtions)
+    public function __construct(string $candidateCode, string $email, string $candidateName, string $group, array $orderedOtions)
     {
+        $this->candidateCode = $candidateCode;
         $this->email = $email;
         $this->candidateName = $candidateName;
         $this->group = $group;
@@ -35,5 +37,10 @@ class RequestActivitiesCommand
     public function orderedOtions(): array
     {
         return $this->orderedOtions;
+    }
+
+    public function candidateCode(): string
+    {
+        return $this->candidateCode;
     }
 }

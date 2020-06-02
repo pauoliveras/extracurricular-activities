@@ -9,7 +9,7 @@ use App\Domain\ActivityRepository;
 use App\Domain\Exception\DuplicateCandidateRequestException;
 use App\Domain\NullActivity;
 use App\Domain\ValueObject\ActivityCode;
-use App\Domain\ValueObject\Email;
+use App\Domain\ValueObject\CandidateCode;
 use App\Domain\ValueObject\Id;
 use App\Tests\Infrastructure\Stubs\InMemoryCandidateRepository;
 use App\Tests\Infrastructure\Stubs\StubCapacity;
@@ -41,6 +41,7 @@ class RequestActivitiesCommandHandlerTest extends TestCase
     public function test_candidate_request_is_created_with_provided_data()
     {
         $command = new RequestActivitiesCommand(
+            'Candidate name|Candidate group',
             'candidate@email.com',
             'Candidate name',
             'Candidate group',
@@ -55,7 +56,7 @@ class RequestActivitiesCommandHandlerTest extends TestCase
 
         $this->requestActivitiesCommandHandler->__invoke($command);
 
-        $savedCandidate = $this->candidateRepository->findByEmail(Email::fromString('candidate@email.com'));
+        $savedCandidate = $this->candidateRepository->findByCode(CandidateCode::fromString('Candidate name|Candidate group'));
         $this->assertNotNull($savedCandidate);
     }
 
@@ -68,6 +69,7 @@ class RequestActivitiesCommandHandlerTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
 
         $command = new RequestActivitiesCommand(
+            'Candidate name|Candidate group',
             'candidate@email.com',
             'Candidate name',
             'Candidate group',
@@ -80,6 +82,7 @@ class RequestActivitiesCommandHandlerTest extends TestCase
     public function test_only_one_request_per_candidate_can_be_placed()
     {
         $command = new RequestActivitiesCommand(
+            'Candidate name|Candidate group',
             'candidate@email.com',
             'Candidate name',
             'Candidate group',
@@ -91,6 +94,7 @@ class RequestActivitiesCommandHandlerTest extends TestCase
         $this->expectException(DuplicateCandidateRequestException::class);
 
         $command = new RequestActivitiesCommand(
+            'Candidate name|Candidate group',
             'candidate@email.com',
             'Candidate name',
             'Candidate group',

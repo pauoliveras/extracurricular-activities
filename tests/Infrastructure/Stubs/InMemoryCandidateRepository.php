@@ -6,7 +6,7 @@ use App\Domain\Candidate;
 use App\Domain\CandidateCollection;
 use App\Domain\CandidateRepository;
 use App\Domain\NullCandidate;
-use App\Domain\ValueObject\Email;
+use App\Domain\ValueObject\CandidateCode;
 use App\Domain\ValueObject\Id;
 
 class InMemoryCandidateRepository implements CandidateRepository
@@ -16,13 +16,13 @@ class InMemoryCandidateRepository implements CandidateRepository
 
     public function save(Candidate $candidate)
     {
-        $this->candidates[(string)$candidate->email()] = $candidate;
+        $this->candidates[(string)$candidate->candidateCode()] = $candidate;
         $this->savedCandidates++;
     }
 
-    public function findByEmail(Email $email): Candidate
+    public function findByCode(CandidateCode $code): Candidate
     {
-        return isset($this->candidates[(string)$email]) ? $this->candidates[(string)$email] : NullCandidate::create();
+        return isset($this->candidates[(string)$code]) ? $this->candidates[(string)$code] : NullCandidate::create();
     }
 
     public function nextId(): Id

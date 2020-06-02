@@ -6,7 +6,7 @@ use App\Application\Command\AssignCandidateToActivityCommand;
 use App\Application\Command\GenerateAssignmentsCommand;
 use App\Application\Query\GetCandidatesOrderedByNumberQuery;
 use App\Domain\Exception\ParticipantEnrollmentClosedException;
-use App\Domain\RequestedActivty;
+use App\Domain\RequestedActivity;
 
 class GenerateAssignmentsCommandHandler
 {
@@ -31,7 +31,7 @@ class GenerateAssignmentsCommandHandler
             $this->candidateRequests[$candidate->number()->value()] =
                 array_combine(
                     array_map(
-                        function (RequestedActivty $requestedActivty) {
+                        function (RequestedActivity $requestedActivty) {
                             return (string)$requestedActivty->code();
                         },
                         $candidate->requestedActivities()->toArray()

@@ -27,7 +27,7 @@ class Candidate
      */
     private $id;
     /**
-     * @ORM\Column(type="string", unique=true)
+     * @ORM\Column(type="string")
      */
     private $email;
     /**
@@ -39,12 +39,12 @@ class Candidate
      */
     private $group;
     /**
-     * @ORM\Column(type="integer",name="candidate_number", nullable=true)
+     * @ORM\Column(type="integer",name="candidate_number", nullable=true, unique=true)
      */
     private $candidateNumber;
     /**
      * @ORM\OneToMany(
-     *     targetEntity="App\Domain\RequestedActivty",
+     *     targetEntity="RequestedActivity",
      *     mappedBy="candidate",
      *     cascade={"persist", "remove", "merge"},
      *     orphanRemoval=true,
@@ -55,9 +55,9 @@ class Candidate
      */
     private $requestedActivities = [];
     /**
-     * @var CandidateCode
+     * @ORM\Column(type="string",name="candidate_code", unique=true)
      */
-    private CandidateCode $code;
+    private string $code;
 
     public function __construct(
         Id $id,
@@ -70,7 +70,7 @@ class Candidate
     {
         $this->guardAgainstEmptyRequestedActivities($requestedActivities);
         $this->id = $id;
-        $this->code = $code;
+        $this->code = $code->value();
         $this->email = $email->value();
         $this->candidateName = $candidateName->value();
         $this->group = $group->value();
@@ -91,7 +91,7 @@ class Candidate
 
         foreach ($requestedActivities as $requestedActivityCode) {
             $this->requestedActivities->add(
-                new RequestedActivty(
+                new RequestedActivity(
                     Id::next(),
                     $requestedActivityCode,
                     $requestOrder,
@@ -100,6 +100,11 @@ class Candidate
             );
             $requestOrder->next();
         }
+    }
+
+    public function candidateCode(): CandidateCode
+    {
+        return CandidateCode::fromString($this->code);
     }
 
     private function addRequestedActivity(ActivityCode $activityCode)
@@ -116,7 +121,7 @@ class Candidate
         $iterator = new ArrayIterator($this->requestedActivities->toArray());
 
         $iterator->uasort(
-            function (RequestedActivty $activityA, RequestedActivty $activityB) {
+            function (RequestedActivity $activityA, RequestedActivity $activityB) {
                 return $activityA->order()->value() > $activityB->order()->value() ? 1 : -1;
             }
         );
