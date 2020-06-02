@@ -43,7 +43,7 @@ class Activity
      *     orphanRemoval=true,
      *     fetch="EAGER"
      * )
-     * @ORM\OrderBy({"order" = "ASC"})
+     * @ORM\OrderBy({"candidateNumber" = "ASC"})
      *
      */
     private $participants = [];
