@@ -3,6 +3,7 @@
 namespace App\Domain;
 
 use App\Domain\ValueObject\ActivityCode;
+use App\Domain\ValueObject\CandidateCode;
 use App\Domain\ValueObject\CandidateNumber;
 use App\Domain\ValueObject\Email;
 use App\Domain\ValueObject\Id;
@@ -53,9 +54,14 @@ class Candidate
      *
      */
     private $requestedActivities = [];
+    /**
+     * @var CandidateCode
+     */
+    private CandidateCode $code;
 
     public function __construct(
         Id $id,
+        CandidateCode $code,
         Email $email,
         StringValueObject $candidateName,
         StringValueObject $group,
@@ -64,6 +70,7 @@ class Candidate
     {
         $this->guardAgainstEmptyRequestedActivities($requestedActivities);
         $this->id = $id;
+        $this->code = $code;
         $this->email = $email->value();
         $this->candidateName = $candidateName->value();
         $this->group = $group->value();

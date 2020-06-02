@@ -4,6 +4,7 @@ namespace App\Tests\Unit\Domain;
 
 use App\Domain\Candidate;
 use App\Domain\RequestedActivitiesList;
+use App\Domain\ValueObject\CandidateCode;
 use App\Domain\ValueObject\Email;
 use App\Domain\ValueObject\Id;
 use App\Domain\ValueObject\StringValueObject;
@@ -18,6 +19,7 @@ class CandidateTest extends TestCase
 
         $candidate = new Candidate(
             Id::next(),
+            CandidateCode::fromString('Candidate name|group name'),
             Email::fromString('email@test.com'),
             StringValueObject::fromString('Candidate name'),
             StringValueObject::fromString('group name'),
@@ -36,6 +38,7 @@ class CandidateTest extends TestCase
 
         new Candidate(
             Id::next(),
+            CandidateCode::fromString('Candidate name|group name'),
             Email::fromString('email@test.com'),
             StringValueObject::fromString('Candidate name'),
             StringValueObject::fromString('group name'),
