@@ -20,7 +20,7 @@ class GetCandidatesOrderedByNumberQueryHandlerTest extends TestCase
 
     public function test_when_no_candidates_empty_collection_is_returned()
     {
-        $query = new GetCandidatesOrderedByNumberQuery(LuckyDrawNumber::fromInt(rand(1, 10))->value());
+        $query = new GetCandidatesOrderedByNumberQuery(LuckyDrawNumber::fromInt(random_int(1, 10))->value());
 
         $orderedCandidates = $this->queryHandler->__invoke($query);
 

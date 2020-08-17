@@ -13,7 +13,7 @@ class StubRequestedActivitiesList
     {
         $faker = Factory::create();
         return RequestedActivitiesList::createFromArray(
-            $faker->randomElements($activities, rand(1, count($activities)))
+            $faker->randomElements($activities, random_int(1, count($activities)))
         );
     }
 
@@ -21,7 +21,7 @@ class StubRequestedActivitiesList
     {
         $faker = Factory::create();
         return RequestedActivitiesList::createFromArray(
-            $faker->randomElements(self::DEFAULT_ACTIVITIES, rand(1, count(self::DEFAULT_ACTIVITIES)))
+            $faker->randomElements(self::DEFAULT_ACTIVITIES, random_int(1, count(self::DEFAULT_ACTIVITIES)))
         );
     }
 
