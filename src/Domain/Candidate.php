@@ -2,7 +2,6 @@
 
 namespace App\Domain;
 
-use App\Domain\ValueObject\ActivityCode;
 use App\Domain\ValueObject\CandidateCode;
 use App\Domain\ValueObject\CandidateNumber;
 use App\Domain\ValueObject\Email;
@@ -105,10 +104,6 @@ class Candidate
     public function candidateCode(): CandidateCode
     {
         return CandidateCode::fromString($this->code);
-    }
-
-    private function addRequestedActivity(ActivityCode $activityCode)
-    {
     }
 
     public function email(): Email
