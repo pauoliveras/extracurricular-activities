@@ -20,4 +20,9 @@ class IntValueObject
     {
         return $this->value;
     }
+
+    public function equalsTo(IntValueObject $other)
+    {
+        return $this->value === $other->value;
+    }
 }

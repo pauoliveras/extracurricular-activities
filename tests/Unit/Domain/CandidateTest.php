@@ -5,6 +5,7 @@ namespace App\Tests\Unit\Domain;
 use App\Domain\Candidate;
 use App\Domain\RequestedActivitiesList;
 use App\Domain\ValueObject\CandidateCode;
+use App\Domain\ValueObject\DesiredActivityCount;
 use App\Domain\ValueObject\Email;
 use App\Domain\ValueObject\Id;
 use App\Domain\ValueObject\StringValueObject;
@@ -23,12 +24,14 @@ class CandidateTest extends TestCase
             Email::fromString('email@test.com'),
             StringValueObject::fromString('Candidate name'),
             StringValueObject::fromString('group name'),
-            $requestedActvities
+            $requestedActvities,
+            DesiredActivityCount::fromInt(3)
         );
 
         $this->assertEquals('email@test.com', $candidate->email()->value());
         $this->assertEquals('Candidate name', $candidate->candidateName()->value());
         $this->assertEquals('group name', $candidate->candidateGroup()->value());
+        $this->assertEquals(3, $candidate->desiredActivityCount()->value());
         $this->assertNotEmpty($candidate->requestedActivities());
     }
 
@@ -42,7 +45,8 @@ class CandidateTest extends TestCase
             Email::fromString('email@test.com'),
             StringValueObject::fromString('Candidate name'),
             StringValueObject::fromString('group name'),
-            RequestedActivitiesList::createFromArray([])
+            RequestedActivitiesList::createFromArray([]),
+            DesiredActivityCount::fromInt(3)
         );
     }
 }

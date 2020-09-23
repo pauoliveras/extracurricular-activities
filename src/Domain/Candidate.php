@@ -4,6 +4,7 @@ namespace App\Domain;
 
 use App\Domain\ValueObject\CandidateCode;
 use App\Domain\ValueObject\CandidateNumber;
+use App\Domain\ValueObject\DesiredActivityCount;
 use App\Domain\ValueObject\Email;
 use App\Domain\ValueObject\Id;
 use App\Domain\ValueObject\RequestOrder;
@@ -57,6 +58,10 @@ class Candidate
      * @ORM\Column(type="string",name="candidate_code", unique=true)
      */
     private string $code;
+    /**
+     * @ORM\Column(type="integer",name="desired_activity_count", nullable=false)
+     */
+    private int $desiredActivityCount;
 
     public function __construct(
         Id $id,
@@ -64,7 +69,8 @@ class Candidate
         Email $email,
         StringValueObject $candidateName,
         StringValueObject $group,
-        RequestedActivitiesList $requestedActivities
+        RequestedActivitiesList $requestedActivities,
+        DesiredActivityCount $desiredActivityCount
     )
     {
         $this->guardAgainstEmptyRequestedActivities($requestedActivities);
@@ -75,6 +81,7 @@ class Candidate
         $this->group = $group->value();
         $this->requestedActivities = new ArrayCollection();
         $this->addRequestedActivities($requestedActivities);
+        $this->desiredActivityCount = $desiredActivityCount->value();
     }
 
     protected function guardAgainstEmptyRequestedActivities(RequestedActivitiesList $requestedActivities): void
@@ -147,6 +154,11 @@ class Candidate
     public function assignNumber(CandidateNumber $number)
     {
         $this->candidateNumber = $number->value();
+    }
+
+    public function desiredActivityCount(): DesiredActivityCount
+    {
+        return DesiredActivityCount::fromInt($this->desiredActivityCount);
     }
 
 }

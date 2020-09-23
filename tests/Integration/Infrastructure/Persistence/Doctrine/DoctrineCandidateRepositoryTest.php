@@ -6,6 +6,7 @@ use App\Domain\Candidate;
 use App\Domain\CandidateRepository;
 use App\Domain\RequestedActivitiesList;
 use App\Domain\ValueObject\CandidateCode;
+use App\Domain\ValueObject\DesiredActivityCount;
 use App\Domain\ValueObject\Email;
 use App\Domain\ValueObject\Id;
 use App\Domain\ValueObject\StringValueObject;
@@ -27,7 +28,8 @@ class DoctrineCandidateRepositoryTest extends BaseKernelTestCase
             Email::fromString('test@email.com'),
             StringValueObject::fromString('candidate name'),
             StringValueObject::fromString('group'),
-            RequestedActivitiesList::createFromArray(['activity_1', 'activity_2', 'activity_3'])
+            RequestedActivitiesList::createFromArray(['activity_1', 'activity_2', 'activity_3']),
+            DesiredActivityCount::fromInt(4)
         );
 
         $this->repository->save($candidate);

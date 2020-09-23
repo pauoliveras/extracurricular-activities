@@ -5,6 +5,7 @@ namespace App\Tests\Infrastructure\Stubs;
 use App\Domain\Candidate;
 use App\Domain\ValueObject\CandidateCode;
 use App\Domain\ValueObject\CandidateNumber;
+use App\Domain\ValueObject\DesiredActivityCount;
 use App\Domain\ValueObject\Email;
 use App\Domain\ValueObject\StringValueObject;
 
@@ -17,6 +18,7 @@ class CandidateStubBuilder
     private $requestedActivitiesList;
     private $candidateNumber;
     private $code;
+    private ?DesiredActivityCount $desiredActivityCount;
 
     public function __construct()
     {
@@ -32,6 +34,7 @@ class CandidateStubBuilder
         $this->requestedActivitiesList = StubRequestedActivitiesList::random();
         $this->candidateNumber = null;
         $this->code = CandidateCode::fromString($this->candidateName->value() . "|" . $this->candidateGroup->value());
+        $this->desiredActivityCount = StubDesiredActivityCount::random();
     }
 
     public static function create()
@@ -47,7 +50,8 @@ class CandidateStubBuilder
             $this->email,
             $this->candidateName,
             $this->candidateGroup,
-            $this->requestedActivitiesList
+            $this->requestedActivitiesList,
+            $this->desiredActivityCount
         );
 
         if ($this->candidateNumber) {

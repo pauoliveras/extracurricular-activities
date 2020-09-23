@@ -26,7 +26,7 @@ class RandomizeCandidatesContext extends BaseContext
     }
 
     /**
-     * @Given :count candidates have placed a request to any of this activities :activiries
+     * @Given :count candidates have placed a request to any of this activities :activities
      */
     public function candidatesHavePlacedARequestToAnyOfThisActivities(int $count, string $activities)
     {

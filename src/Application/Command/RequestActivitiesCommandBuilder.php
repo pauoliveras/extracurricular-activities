@@ -7,6 +7,7 @@ class RequestActivitiesCommandBuilder
     private $email;
     private $candidateName;
     private $group;
+    private ?int $desiredActivityCount = null;
     /**
      * @var array
      */
@@ -45,6 +46,13 @@ class RequestActivitiesCommandBuilder
         return $this;
     }
 
+    public function withDesiredActivityCount(?int $desiredActivityCount): self
+    {
+        $this->desiredActivityCount = $desiredActivityCount;
+
+        return $this;
+    }
+
     public function withOption(string $option): self
     {
         if (!empty($option)) {
@@ -56,7 +64,14 @@ class RequestActivitiesCommandBuilder
 
     public function build(): RequestActivitiesCommand
     {
-        return new RequestActivitiesCommand($this->code ?? $this->defaultCode(), $this->email, $this->candidateName, $this->group, $this->orderedOtions);
+        return new RequestActivitiesCommand(
+            $this->code ?? $this->defaultCode(),
+            $this->email,
+            $this->candidateName,
+            $this->group,
+            $this->orderedOtions,
+            $this->desiredActivityCount
+        );
     }
 
     private function defaultCode()

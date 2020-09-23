@@ -10,6 +10,7 @@ use App\Domain\CandidateRepository;
 use App\Domain\Exception\DuplicateCandidateRequestException;
 use App\Domain\RequestedActivitiesList;
 use App\Domain\ValueObject\CandidateCode;
+use App\Domain\ValueObject\DesiredActivityCount;
 use App\Domain\ValueObject\Email;
 use App\Domain\ValueObject\StringValueObject;
 use InvalidArgumentException;
@@ -45,7 +46,8 @@ class RequestActivitiesCommandHandler
             Email::fromString($command->email()),
             StringValueObject::fromString($command->candidateName()),
             StringValueObject::fromString($command->group()),
-            $requestedActivities
+            $requestedActivities,
+            DesiredActivityCount::fromInt($command->desiredActivityCount())
         );
 
         $this->candidateRepository->save($candidate);

@@ -8,6 +8,7 @@ use App\Domain\CandidateRepository;
 use App\Domain\RequestedActivity;
 use App\Domain\ValueObject\ActivityCode;
 use App\Domain\ValueObject\CandidateCode;
+use App\Domain\ValueObject\DesiredActivityCount;
 use App\Domain\ValueObject\Id;
 use App\Tests\Infrastructure\Stubs\StubCapacity;
 use Behat\Gherkin\Node\PyStringNode;
@@ -91,6 +92,30 @@ class LoadCandidateRequestsFromCsvContext extends BaseContext
                 $candidate->requestedActivities()->toArray()
             ))
         );
+    }
+
+    /**
+     * @Given candidate :candidateCode wants :candidateMaxActivities activities at most
+     */
+    public function candidateWantsActivitiesAtMost($candidateCode, $candidateMaxActivities)
+    {
+        $candidate = $this->candidateRepository->findByCode(CandidateCode::fromString($candidateCode));
+
+        Assert::notNull($candidate);
+
+        Assert::eq($candidate->desiredActivityCount()->value(), (int)$candidateMaxActivities);
+    }
+
+    /**
+     * @Given candidate :candidateCode wants all requested activities
+     */
+    public function candidateWantsAllRequestedActivities($candidateCode)
+    {
+        $candidate = $this->candidateRepository->findByCode(CandidateCode::fromString($candidateCode));
+
+        Assert::notNull($candidate);
+
+        Assert::true($candidate->desiredActivityCount()->equalsTo(DesiredActivityCount::fromInt(null)));
     }
 
 }

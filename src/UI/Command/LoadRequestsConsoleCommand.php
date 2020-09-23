@@ -76,7 +76,8 @@ class LoadRequestsConsoleCommand extends Command
         $builder = (new RequestActivitiesCommandBuilder())
             ->withEmail($request['email'])
             ->withCandidateName($request['candidate'])
-            ->withGroup($request['group']);
+            ->withGroup($request['group'])
+            ->withDesiredActivityCount(empty($request['desired_activity_count']) ? null : (int)$request['desired_activity_count']);
 
         for ($i = 1; $i <= 5; $i++) {
             if (isset($request[sprintf('option%d', $i)])) {

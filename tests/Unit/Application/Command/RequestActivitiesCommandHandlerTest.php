@@ -45,7 +45,8 @@ class RequestActivitiesCommandHandlerTest extends TestCase
             'candidate@email.com',
             'Candidate name',
             'Candidate group',
-            ['activity_1', 'activity_2', 'activity_3']
+            ['activity_1', 'activity_2', 'activity_3'],
+            2
         );
 
         $this->activityRepository->method('findByCode')->willReturnOnConsecutiveCalls(
@@ -73,7 +74,8 @@ class RequestActivitiesCommandHandlerTest extends TestCase
             'candidate@email.com',
             'Candidate name',
             'Candidate group',
-            ['non_existing_activity']
+            ['non_existing_activity'],
+            null
         );
 
         $this->requestActivitiesCommandHandler->__invoke($command);
@@ -86,7 +88,8 @@ class RequestActivitiesCommandHandlerTest extends TestCase
             'candidate@email.com',
             'Candidate name',
             'Candidate group',
-            ['activity_1', 'activity_2']
+            ['activity_1', 'activity_2'],
+            null
         );
 
         $this->requestActivitiesCommandHandler->__invoke($command);
@@ -98,7 +101,8 @@ class RequestActivitiesCommandHandlerTest extends TestCase
             'candidate@email.com',
             'Candidate name',
             'Candidate group',
-            ['activity_3']
+            ['activity_3'],
+            null
         );
 
         $this->requestActivitiesCommandHandler->__invoke($command);
