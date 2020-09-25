@@ -77,6 +77,7 @@ class LoadRequestsConsoleCommand extends Command
             ->withEmail($request['email'])
             ->withCandidateName($request['candidate'])
             ->withGroup($request['group'])
+            ->withMembership($request['is_member'] === 'yes')
             ->withDesiredActivityCount(empty($request['desired_activity_count']) ? null : (int)$request['desired_activity_count']);
 
         for ($i = 1; $i <= 5; $i++) {

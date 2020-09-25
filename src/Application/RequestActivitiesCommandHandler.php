@@ -9,6 +9,7 @@ use App\Domain\Candidate;
 use App\Domain\CandidateRepository;
 use App\Domain\Exception\DuplicateCandidateRequestException;
 use App\Domain\RequestedActivitiesList;
+use App\Domain\ValueObject\BooleanValueObject;
 use App\Domain\ValueObject\CandidateCode;
 use App\Domain\ValueObject\DesiredActivityCount;
 use App\Domain\ValueObject\Email;
@@ -17,11 +18,8 @@ use InvalidArgumentException;
 
 class RequestActivitiesCommandHandler
 {
-    private $candidateRepository;
-    /**
-     * @var ActivityRepository
-     */
-    private $activityRepository;
+    private CandidateRepository  $candidateRepository;
+    private ActivityRepository $activityRepository;
 
     public function __construct(
         CandidateRepository $candidateRepository,
@@ -47,7 +45,8 @@ class RequestActivitiesCommandHandler
             StringValueObject::fromString($command->candidateName()),
             StringValueObject::fromString($command->group()),
             $requestedActivities,
-            DesiredActivityCount::fromInt($command->desiredActivityCount())
+            DesiredActivityCount::fromInt($command->desiredActivityCount()),
+            BooleanValueObject::fromValue($command->membership())
         );
 
         $this->candidateRepository->save($candidate);

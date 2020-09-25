@@ -10,6 +10,7 @@ class RequestActivitiesCommand
     private array $orderedOtions = [];
     private string $candidateCode;
     private ?int $desiredActivityCount;
+    private bool $membership;
 
     public function __construct(
         string $candidateCode,
@@ -17,7 +18,8 @@ class RequestActivitiesCommand
         string $candidateName,
         string $group,
         array $orderedOtions,
-        ?int $desiredActivityCount
+        ?int $desiredActivityCount,
+        bool $membership
     )
     {
         $this->candidateCode = $candidateCode;
@@ -26,6 +28,7 @@ class RequestActivitiesCommand
         $this->group = $group;
         $this->orderedOtions = $orderedOtions;
         $this->desiredActivityCount = $desiredActivityCount;
+        $this->membership = $membership;
     }
 
     public function email(): string
@@ -56,6 +59,11 @@ class RequestActivitiesCommand
     public function desiredActivityCount(): ?int
     {
         return $this->desiredActivityCount;
+    }
+
+    public function membership()
+    {
+        return $this->membership;
     }
 
 }

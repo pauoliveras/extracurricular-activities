@@ -7,12 +7,10 @@ class RequestActivitiesCommandBuilder
     private $email;
     private $candidateName;
     private $group;
+    private array $orderedOtions;
     private ?int $desiredActivityCount = null;
-    /**
-     * @var array
-     */
-    private $orderedOtions;
     private ?string $code = null;
+    private ?bool $membership = false;
 
     public function __construct()
     {
@@ -70,12 +68,20 @@ class RequestActivitiesCommandBuilder
             $this->candidateName,
             $this->group,
             $this->orderedOtions,
-            $this->desiredActivityCount
+            $this->desiredActivityCount,
+            $this->membership
         );
     }
 
     private function defaultCode()
     {
         return sprintf('%s|%s', $this->candidateName, $this->group);
+    }
+
+    public function withMembership(?bool $isMember = false)
+    {
+        $this->membership = $isMember;
+
+        return $this;
     }
 }

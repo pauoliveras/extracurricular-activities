@@ -29,6 +29,7 @@ class LoadCandidateRequestsFromCsvContext extends BaseContext
      * @var CandidateRepository
      */
     private $candidateRepository;
+    private int $commandResult;
 
     public function __construct(KernelInterface $kernel)
     {
@@ -57,7 +58,7 @@ class LoadCandidateRequestsFromCsvContext extends BaseContext
 
         $command = $application->find('app:load-requests');
         $commandTester = new CommandTester($command);
-        $commandTester->execute(['filename' => $filename]);
+        $this->commandResult = $commandTester->execute(['filename' => $filename]);
     }
 
     /**
@@ -116,6 +117,14 @@ class LoadCandidateRequestsFromCsvContext extends BaseContext
         Assert::notNull($candidate);
 
         Assert::true($candidate->desiredActivityCount()->equalsTo(DesiredActivityCount::fromInt(null)));
+    }
+
+    /**
+     * @Then /^command execution is successfull$/
+     */
+    public function commandExecutionIsSuccessfull()
+    {
+        Assert::eq($this->commandResult, 0, 'Command execution result different from expected!');
     }
 
 }

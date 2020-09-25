@@ -2,6 +2,7 @@
 
 namespace App\Domain;
 
+use App\Domain\ValueObject\BooleanValueObject;
 use App\Domain\ValueObject\CandidateCode;
 use App\Domain\ValueObject\CandidateNumber;
 use App\Domain\ValueObject\DesiredActivityCount;
@@ -62,6 +63,10 @@ class Candidate
      * @ORM\Column(type="integer",name="desired_activity_count", nullable=false)
      */
     private int $desiredActivityCount;
+    /**
+     * @ORM\Column(type="boolean",name="membership", nullable=false, options={"default":false})
+     */
+    private bool $membership;
 
     public function __construct(
         Id $id,
@@ -70,7 +75,8 @@ class Candidate
         StringValueObject $candidateName,
         StringValueObject $group,
         RequestedActivitiesList $requestedActivities,
-        DesiredActivityCount $desiredActivityCount
+        DesiredActivityCount $desiredActivityCount,
+        BooleanValueObject $membership
     )
     {
         $this->guardAgainstEmptyRequestedActivities($requestedActivities);
@@ -82,6 +88,7 @@ class Candidate
         $this->requestedActivities = new ArrayCollection();
         $this->addRequestedActivities($requestedActivities);
         $this->desiredActivityCount = $desiredActivityCount->value();
+        $this->membership = $membership->value();
     }
 
     protected function guardAgainstEmptyRequestedActivities(RequestedActivitiesList $requestedActivities): void
