@@ -3,6 +3,7 @@
 namespace App\Tests\Infrastructure\Stubs;
 
 use App\Domain\Candidate;
+use App\Domain\ValueObject\BooleanValueObject;
 use App\Domain\ValueObject\CandidateCode;
 use App\Domain\ValueObject\CandidateNumber;
 use App\Domain\ValueObject\DesiredActivityCount;
@@ -19,6 +20,7 @@ class CandidateStubBuilder
     private $candidateNumber;
     private $code;
     private ?DesiredActivityCount $desiredActivityCount;
+    private BooleanValueObject $membership;
 
     public function __construct()
     {
@@ -35,6 +37,7 @@ class CandidateStubBuilder
         $this->candidateNumber = null;
         $this->code = CandidateCode::fromString($this->candidateName->value() . "|" . $this->candidateGroup->value());
         $this->desiredActivityCount = StubDesiredActivityCount::random();
+        $this->membership = BooleanValueObject::true();
     }
 
     public static function create()
@@ -51,7 +54,8 @@ class CandidateStubBuilder
             $this->candidateName,
             $this->candidateGroup,
             $this->requestedActivitiesList,
-            $this->desiredActivityCount
+            $this->desiredActivityCount,
+            $this->membership
         );
 
         if ($this->candidateNumber) {
@@ -94,6 +98,13 @@ class CandidateStubBuilder
     public function withEmail(Email $email)
     {
         $this->email = $email;
+
+        return $this;
+    }
+
+    public function withMembership(BooleanValueObject $membership)
+    {
+        $this->membership = $membership;
 
         return $this;
     }

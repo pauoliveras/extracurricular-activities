@@ -15,7 +15,8 @@ class RequestActivitiesCommandTest extends TestCase
             'candidate name',
             'group',
             ['option1', 'option2', 'option3'],
-            5
+            5,
+            true
         );
 
         $this->assertEquals('test@email.com', $command->email());

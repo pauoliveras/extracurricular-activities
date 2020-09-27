@@ -16,6 +16,11 @@ class BooleanValueObject
         return new static($value);
     }
 
+    public static function true()
+    {
+        return new self(true);
+    }
+
     public function value(): bool
     {
         return $this->value;
@@ -24,5 +29,15 @@ class BooleanValueObject
     public function equals(BooleanValueObject $other)
     {
         return $this->value === $other->value;
+    }
+
+    public function isTrue(): bool
+    {
+        return $this->value === true;
+    }
+
+    public function isFalse(): bool
+    {
+        return $this->value === false;
     }
 }

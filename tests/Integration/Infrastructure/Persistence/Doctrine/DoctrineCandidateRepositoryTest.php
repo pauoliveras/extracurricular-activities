@@ -5,6 +5,7 @@ namespace App\Tests\Integration\Infrastructure\Persistence\Doctrine;
 use App\Domain\Candidate;
 use App\Domain\CandidateRepository;
 use App\Domain\RequestedActivitiesList;
+use App\Domain\ValueObject\BooleanValueObject;
 use App\Domain\ValueObject\CandidateCode;
 use App\Domain\ValueObject\DesiredActivityCount;
 use App\Domain\ValueObject\Email;
@@ -29,7 +30,8 @@ class DoctrineCandidateRepositoryTest extends BaseKernelTestCase
             StringValueObject::fromString('candidate name'),
             StringValueObject::fromString('group'),
             RequestedActivitiesList::createFromArray(['activity_1', 'activity_2', 'activity_3']),
-            DesiredActivityCount::fromInt(4)
+            DesiredActivityCount::fromInt(4),
+            BooleanValueObject::true()
         );
 
         $this->repository->save($candidate);

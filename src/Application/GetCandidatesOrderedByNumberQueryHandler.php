@@ -6,6 +6,7 @@ use App\Application\Query\GetCandidatesOrderedByNumberQuery;
 use App\Domain\Candidate;
 use App\Domain\CandidateCollection;
 use App\Domain\CandidateRepository;
+use App\Domain\ValueObject\LuckyDrawNumber;
 use InvalidArgumentException;
 
 class GetCandidatesOrderedByNumberQueryHandler
@@ -30,11 +31,16 @@ class GetCandidatesOrderedByNumberQueryHandler
         }
 
         $orderedCandidates = $this->getOrderedCandidatesByNumber($candidates);
+        $orderedCandidatesByLuckyDrawNumber = $this->orderCandidatesByLuckyNumber($orderedCandidates, $query->number());
 
-        $firstBlock = array_slice($orderedCandidates, 0, $query->number()->value() - 1);
-        $secondBlock = array_slice($orderedCandidates, $query->number()->value() - 1);
+        $orderedMemberCandidates = array_filter($orderedCandidatesByLuckyDrawNumber, function (Candidate $candidate) {
+            return $candidate->isMember();
+        });
+        $orderedNonMemberCandidates = array_filter($orderedCandidatesByLuckyDrawNumber, function (Candidate $candidate) {
+            return !$candidate->isMember();
+        });
 
-        return new CandidateCollection(array_merge($secondBlock, $firstBlock));
+        return new CandidateCollection(array_merge($orderedMemberCandidates, $orderedNonMemberCandidates));
     }
 
     protected function getOrderedCandidatesByNumber(CandidateCollection $candidates): array
@@ -47,6 +53,13 @@ class GetCandidatesOrderedByNumberQueryHandler
         );
 
         return iterator_to_array($arrayIterator);
+    }
+
+    protected function orderCandidatesByLuckyNumber(array $orderedCandidates, LuckyDrawNumber $number): array
+    {
+        $firstBlock = array_slice($orderedCandidates, 0, $number->value() - 1);
+        $secondBlock = array_slice($orderedCandidates, $number->value() - 1);
+        return array_merge($secondBlock, $firstBlock);
     }
 
 }

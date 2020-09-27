@@ -168,4 +168,13 @@ class Candidate
         return DesiredActivityCount::fromInt($this->desiredActivityCount);
     }
 
+    public function isMember(): bool
+    {
+        return $this->membership()->isTrue();
+    }
+
+    private function membership()
+    {
+        return BooleanValueObject::fromValue($this->membership);
+    }
 }
