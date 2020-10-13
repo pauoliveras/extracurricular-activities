@@ -48,7 +48,7 @@ class GetCandidatesOrderedByNumberQueryHandler
         $arrayIterator = $candidates->getIterator();
         $arrayIterator->uasort(
             function (Candidate $first, Candidate $second) {
-                return $first->number()->value() > $second->number()->value();
+                return $first->number()->value() >= $second->number()->value();
             }
         );
 
@@ -57,8 +57,15 @@ class GetCandidatesOrderedByNumberQueryHandler
 
     protected function orderCandidatesByLuckyNumber(array $orderedCandidates, LuckyDrawNumber $number): array
     {
-        $firstBlock = array_slice($orderedCandidates, 0, $number->value() - 1);
-        $secondBlock = array_slice($orderedCandidates, $number->value() - 1);
+        $firstBlock = $secondBlock = [];
+        /** @var Candidate $orderedCandidate */
+        foreach ($orderedCandidates as $orderedCandidate) {
+            if ($orderedCandidate->number()->value() < $number->value()) {
+                $firstBlock[] = $orderedCandidate;
+            } else {
+                $secondBlock[] = $orderedCandidate;
+            }
+        }
         return array_merge($secondBlock, $firstBlock);
     }
 
