@@ -40,7 +40,7 @@ class Candidate
      */
     private $group;
     /**
-     * @ORM\Column(type="integer",name="candidate_number", nullable=true, unique=true)
+     * @ORM\Column(type="integer",name="candidate_number", nullable=true)
      */
     private $candidateNumber;
     /**
