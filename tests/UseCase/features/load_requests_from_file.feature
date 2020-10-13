@@ -19,7 +19,7 @@ Feature: Load requests from file
     user1@gmail.com;candidate 1;group 1;1;yes;piscina;anglès;ioga;dansa;circ
     user1@gmail.com;candidate 2;group 2;2;yes;ioga;anglès;piscina;circ
     user3@gmail.com;candidate 3;group 1;3;no;circ;ioga;dansa;piscina;anglès
-    user4@gmail.com;candidate 4;group 2;4;yes;ioga;dansa;circ
+    user4@gmail.com;candidate 4;group 2;3;yes;ioga;dansa;circ
     """
     When load requests command is executed against file "var/data/tests/requests.csv"
     Then command execution is successfull
