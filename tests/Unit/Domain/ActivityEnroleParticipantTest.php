@@ -11,12 +11,13 @@ use App\Domain\ValueObject\Email;
 use App\Domain\ValueObject\SequenceNumber;
 use App\Domain\ValueObject\StringValueObject;
 use App\Tests\Infrastructure\Stubs\StubActivityCode;
+use App\Tests\Infrastructure\Stubs\StubCandidateId;
 use App\Tests\Infrastructure\Stubs\StubId;
 use PHPUnit\Framework\TestCase;
 
 class ActivityEnroleParticipantTest extends TestCase
 {
-    public function test_a_participant_cant_be_enrolled()
+    public function test_a_participant_can_be_enrolled()
     {
         $activity = Activity::create(
             StubId::random(),
@@ -30,7 +31,8 @@ class ActivityEnroleParticipantTest extends TestCase
             Email::fromString('participant@email.com'),
             StringValueObject::fromString('Participant name'),
             CandidateNumber::fromInt(1),
-            SequenceNumber::initial()
+            SequenceNumber::initial(),
+            StubCandidateId::random()
         );
 
         $this->addToAssertionCount(1);
@@ -49,7 +51,8 @@ class ActivityEnroleParticipantTest extends TestCase
             Email::fromString('participant@email.com'),
             StringValueObject::fromString('Participant name'),
             CandidateNumber::fromInt(1),
-            SequenceNumber::initial()
+            SequenceNumber::initial(),
+            StubCandidateId::random()
         );
 
         $this->assertCount(1, $activity->participants());
@@ -63,11 +66,13 @@ class ActivityEnroleParticipantTest extends TestCase
             Capacity::fromInt(10)
         );
 
+        $candidateId = StubCandidateId::random();
         $activity->enroll(
             Email::fromString('participant1@email.com'),
             StringValueObject::fromString('Participant 1 name'),
             CandidateNumber::fromInt(1),
-            SequenceNumber::initial()
+            SequenceNumber::initial(),
+            $candidateId
         );
 
         $this->expectException(DuplicateParticipantEnrollmentException::class);
@@ -76,7 +81,8 @@ class ActivityEnroleParticipantTest extends TestCase
             Email::fromString('participant1@email.com'),
             StringValueObject::fromString('Participant 1 name'),
             CandidateNumber::fromInt(1),
-            SequenceNumber::initial()
+            SequenceNumber::initial(),
+            $candidateId
         );
     }
 
@@ -92,7 +98,8 @@ class ActivityEnroleParticipantTest extends TestCase
             Email::fromString('participant1@email.com'),
             StringValueObject::fromString('Participant 1 name'),
             CandidateNumber::fromInt(1),
-            SequenceNumber::initial()
+            SequenceNumber::initial(),
+            StubCandidateId::random()
         );
 
         $this->expectException(ParticipantEnrollmentClosedException::class);
@@ -101,7 +108,8 @@ class ActivityEnroleParticipantTest extends TestCase
             Email::fromString('participant2@email.com'),
             StringValueObject::fromString('Participant 2 name'),
             CandidateNumber::fromInt(2),
-            SequenceNumber::initial()
+            SequenceNumber::initial(),
+            StubCandidateId::random()
         );
     }
 }

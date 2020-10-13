@@ -67,12 +67,12 @@ class Activity
         return false;
     }
 
-    public function enroll(Email $email, StringValueObject $participantName, CandidateNumber $candidateNumber, SequenceNumber $sequenceNumber)
+    public function enroll(Email $email, StringValueObject $participantName, CandidateNumber $candidateNumber, SequenceNumber $sequenceNumber, Id $candidateId)
     {
         if ($this->capacity <= $this->participants->count()) {
             throw ParticipantEnrollmentClosedException::ofActivity(ActivityCode::fromString($this->code));
         }
-        $participant = new Participant(Id::next(), $this, $email, $participantName, $candidateNumber, $sequenceNumber);
+        $participant = new Participant(Id::next(), $this, $email, $participantName, $candidateNumber, $sequenceNumber, $candidateId);
         $this->assertParticipantNotAlreadyEnrolled($participantName);
         $this->participants->add($participant);
     }

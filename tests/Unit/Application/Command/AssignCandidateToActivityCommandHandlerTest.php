@@ -13,6 +13,7 @@ use App\Domain\ValueObject\Email;
 use App\Domain\ValueObject\SequenceNumber;
 use App\Domain\ValueObject\StringValueObject;
 use App\Tests\Infrastructure\Stubs\ActivityStubBuilder;
+use App\Tests\Infrastructure\Stubs\StubCandidateId;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
@@ -30,6 +31,7 @@ class AssignCandidateToActivityCommandHandlerTest extends TestCase
             Email::fromString('candidate_email@email.com')->value(),
             StringValueObject::fromString('Candidate name')->value(),
             CandidateNumber::fromInt(1)->value(),
+            StubCandidateId::random(),
             SequenceNumber::initial()->value()
         );
         $this->expectException(InvalidArgumentException::class);
@@ -53,6 +55,7 @@ class AssignCandidateToActivityCommandHandlerTest extends TestCase
             Email::fromString('candidate_email@email.com')->value(),
             StringValueObject::fromString('Candidate name')->value(),
             CandidateNumber::fromInt(1)->value(),
+            StubCandidateId::random(),
             SequenceNumber::initial()->value()
         );
 

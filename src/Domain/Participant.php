@@ -31,6 +31,11 @@ class Participant
      * @ORM\Column(type="integer")
      */
     private int $candidateNumber;
+
+    /**
+     * @ORM\Column(type="string")
+     */
+    private string $candidateId;
     /**
      * @ORM\Column(type="integer")
      */
@@ -41,7 +46,15 @@ class Participant
      */
     private Activity $activity;
 
-    public function __construct(Id $id, Activity $activity, Email $email, StringValueObject $participantName, CandidateNumber $candidateNumber, SequenceNumber $sequenceNumber)
+    public function __construct(
+        Id $id,
+        Activity $activity,
+        Email $email,
+        StringValueObject $participantName,
+        CandidateNumber $candidateNumber,
+        SequenceNumber $sequenceNumber,
+        Id $candidateId
+    )
     {
         $this->id = $id;
         $this->email = $email->value();
@@ -49,6 +62,7 @@ class Participant
         $this->activity = $activity;
         $this->candidateNumber = $candidateNumber->value();
         $this->sequenceNumber = $sequenceNumber->value();
+        $this->candidateId = $candidateId;
     }
 
     public function email(): Email

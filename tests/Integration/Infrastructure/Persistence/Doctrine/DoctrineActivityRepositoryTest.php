@@ -8,6 +8,7 @@ use App\Domain\ValueObject\Id;
 use App\Domain\ValueObject\SequenceNumber;
 use App\Infrastructure\Persistence\Doctrine\DoctrineActivityRepository;
 use App\Tests\Infrastructure\Stubs\StubActivityCode;
+use App\Tests\Infrastructure\Stubs\StubCandidateId;
 use App\Tests\Infrastructure\Stubs\StubCapacity;
 use App\Tests\Infrastructure\Stubs\StubEmail;
 use App\Tests\Infrastructure\Stubs\StubParticipantName;
@@ -28,7 +29,7 @@ class DoctrineActivityRepositoryTest extends BaseKernelTestCase
             StubCapacity::random()
         );
 
-        $activity->enroll(StubEmail::random(), StubParticipantName::random(), CandidateNumber::fromInt(1), SequenceNumber::initial());
+        $activity->enroll(StubEmail::random(), StubParticipantName::random(), CandidateNumber::fromInt(1), SequenceNumber::initial(), StubCandidateId::random());
 
         $this->repository->save($activity);
 

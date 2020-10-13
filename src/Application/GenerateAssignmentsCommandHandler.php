@@ -59,6 +59,7 @@ class GenerateAssignmentsCommandHandler
                                 $candidate->email()->value(),
                                 $candidate->candidateName()->value(),
                                 $candidate->number()->value(),
+                                $candidate->id(),
                                 $sequenceNumber->value()
                             )
                         );

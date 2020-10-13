@@ -120,6 +120,11 @@ class Candidate
         return CandidateCode::fromString($this->code);
     }
 
+    public function id(): Id
+    {
+        return Id::fromString($this->id);
+    }
+
     public function email(): Email
     {
         return Email::fromString($this->email);
