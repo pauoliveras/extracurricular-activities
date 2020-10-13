@@ -33,14 +33,15 @@ class CandidateStubBuilder
         $this->email = StubEmail::random();
         $this->candidateName = StubCandidateName::random();
         $this->candidateGroup = StubCandidateGroup::random();
-        $this->requestedActivitiesList = StubRequestedActivitiesList::random();
+        $this->desiredActivityCount = StubDesiredActivityCount::random();
+        $this->requestedActivitiesList = StubRequestedActivitiesList::randomAtLeast($this->desiredActivityCount->value());
         $this->candidateNumber = null;
         $this->code = CandidateCode::fromString($this->candidateName->value() . "|" . $this->candidateGroup->value());
-        $this->desiredActivityCount = StubDesiredActivityCount::random();
         $this->membership = BooleanValueObject::true();
     }
 
-    public static function create()
+    public static function
+    create()
     {
         return new self();
     }

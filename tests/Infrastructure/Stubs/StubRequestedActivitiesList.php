@@ -7,7 +7,7 @@ use Faker\Factory;
 
 class StubRequestedActivitiesList
 {
-    private const DEFAULT_ACTIVITIES = ['ioga', 'dansa', 'circ', 'anglès', 'piscina'];
+    private const DEFAULT_ACTIVITIES = ['ioga', 'dansa', 'circ', 'angles', 'piscina'];
 
     public static function randomWith(array $activities)
     {
@@ -22,6 +22,14 @@ class StubRequestedActivitiesList
         $faker = Factory::create();
         return RequestedActivitiesList::createFromArray(
             $faker->randomElements(self::DEFAULT_ACTIVITIES, random_int(1, count(self::DEFAULT_ACTIVITIES)))
+        );
+    }
+
+    public static function randomAtLeast(int $desiredActivities)
+    {
+        $faker = Factory::create();
+        return RequestedActivitiesList::createFromArray(
+            $faker->randomElements(self::DEFAULT_ACTIVITIES, random_int($desiredActivities, count(self::DEFAULT_ACTIVITIES)))
         );
     }
 

@@ -7,7 +7,7 @@ class RequestActivitiesCommandBuilder
     private $email;
     private $candidateName;
     private $group;
-    private array $orderedOtions;
+    private array $orderedOtions = [];
     private ?int $desiredActivityCount = null;
     private ?string $code = null;
     private ?bool $membership = false;
