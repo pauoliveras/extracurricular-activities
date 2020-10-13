@@ -30,7 +30,7 @@ class DoctrineCandidateRepositoryTest extends BaseKernelTestCase
             StringValueObject::fromString('candidate name'),
             StringValueObject::fromString('group'),
             RequestedActivitiesList::createFromArray(['activity_1', 'activity_2', 'activity_3']),
-            DesiredActivityCount::fromInt(4),
+            DesiredActivityCount::fromInt(2),
             BooleanValueObject::true()
         );
 
