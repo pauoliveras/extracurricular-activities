@@ -27,9 +27,9 @@ class GenerateAssignmentsCommandHandler
     public function __invoke(GenerateAssignmentsCommand $command)
     {
         $candidates = $this->getOrderedCandidates->__invoke(new GetCandidatesOrderedByNumberQuery($command->luckyDrawNumber()));
-
+        $candidatePosition = 1;
         foreach ($candidates as $candidate) {
-            $this->candidateRequests[$candidate->number()->value()] =
+            $this->candidateRequests[$candidatePosition] =
                 array_combine(
                     array_map(
                         function (RequestedActivity $requestedActivty) {
@@ -40,14 +40,18 @@ class GenerateAssignmentsCommandHandler
                     $candidate->requestedActivities()->toArray()
                 );
             $this->totalRequestCount += count($candidate->requestedActivities()->toArray());
+            $candidatePosition++;
         }
         $sequenceNumber = SequenceNumber::initial();
         while ($this->processedRequests < $this->totalRequestCount) {
+            $candidatePosition = 0;
             foreach ($candidates as $candidate) {
-                foreach ($this->candidateRequests[$candidate->number()->value()] as $activityCode => $requestedActivity) {
+                $candidatePosition++;
+                foreach ($this->candidateRequests[$candidatePosition] as $activityCode => $requestedActivity) {
 
-                    unset($this->candidateRequests[$candidate->number()->value()][$activityCode]);
+                    unset($this->candidateRequests[$candidatePosition][$activityCode]);
                     $this->processedRequests++;
+
                     try {
                         $this->assignCandidateToActivity->__invoke(
                             new AssignCandidateToActivityCommand(
@@ -59,6 +63,7 @@ class GenerateAssignmentsCommandHandler
                             )
                         );
                         $sequenceNumber = $sequenceNumber->next();
+
                         continue 2;
                     } catch (ParticipantEnrollmentClosedException $exception) {
                         continue;
