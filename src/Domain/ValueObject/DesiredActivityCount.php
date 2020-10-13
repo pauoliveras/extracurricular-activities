@@ -6,7 +6,7 @@ use Webmozart\Assert\Assert;
 
 class DesiredActivityCount extends IntValueObject
 {
-    const MAXIMUM_DESIRED_ACTIVITIES = 5;
+    const MAXIMUM_DESIRED_ACTIVITIES = 3;
 
     public function __construct(int $value)
     {
