@@ -5,6 +5,7 @@ namespace App\Application;
 use App\Application\Command\AssignCandidateToActivityCommand;
 use App\Application\Command\GenerateAssignmentsCommand;
 use App\Application\Query\GetCandidatesOrderedByNumberQuery;
+use App\Domain\Exception\ParticipantAlreadyAssignedToDesiredActivityCount;
 use App\Domain\Exception\ParticipantEnrollmentClosedException;
 use App\Domain\RequestedActivity;
 use App\Domain\ValueObject\SequenceNumber;
@@ -68,6 +69,8 @@ class GenerateAssignmentsCommandHandler
                         continue 2;
                     } catch (ParticipantEnrollmentClosedException $exception) {
                         continue;
+                    } catch (ParticipantAlreadyAssignedToDesiredActivityCount $exception) {
+                        continue 2;
                     }
                 }
             }

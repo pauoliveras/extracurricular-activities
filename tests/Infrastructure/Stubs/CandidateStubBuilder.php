@@ -103,6 +103,13 @@ class CandidateStubBuilder
         return $this;
     }
 
+    public function withDesiredActivityCount(?int $desiredActivityCount)
+    {
+        $this->desiredActivityCount = DesiredActivityCount::fromInt($desiredActivityCount);
+
+        return $this;
+    }
+
     public function withMembership(BooleanValueObject $membership)
     {
         $this->membership = $membership;

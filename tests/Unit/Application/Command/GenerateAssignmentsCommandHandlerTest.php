@@ -8,6 +8,7 @@ use App\Application\GenerateAssignmentsCommandHandler;
 use App\Application\GetCandidatesOrderedByNumberQueryHandler;
 use App\Domain\Candidate;
 use App\Domain\Participant;
+use App\Domain\Read\ParticipantDesiredAssignmentsRepository;
 use App\Domain\ValueObject\CandidateNumber;
 use App\Domain\ValueObject\Capacity;
 use App\Domain\ValueObject\LuckyDrawNumber;
@@ -23,6 +24,7 @@ class GenerateAssignmentsCommandHandlerTest extends TestCase
     private $assignmentGenerator;
     private $candidateRepository;
     private $activityRepository;
+    private $participantDesiredActivityCountRepository;
 
     public function test_a_candidate_is_assigned_to_a_requested_activity()
     {
@@ -133,10 +135,11 @@ class GenerateAssignmentsCommandHandlerTest extends TestCase
     {
         $this->candidateRepository = new InMemoryCandidateRepository();
         $this->activityRepository = new InMemoryActivityRepository();
+        $this->participantDesiredActivityCountRepository = $this->createMock(ParticipantDesiredAssignmentsRepository::class);
 
         $this->assignmentGenerator = new GenerateAssignmentsCommandHandler(
             new GetCandidatesOrderedByNumberQueryHandler($this->candidateRepository),
-            new AssignCandidateToActivityCommandHandler($this->activityRepository)
+            new AssignCandidateToActivityCommandHandler($this->activityRepository, $this->participantDesiredActivityCountRepository)
         );
     }
 
