@@ -54,7 +54,7 @@ class Candidate
      * @ORM\OrderBy({"order" = "ASC"})
      *
      */
-    private $requestedActivities = [];
+    private $requestedActivities;
     /**
      * @ORM\Column(type="string",name="candidate_code", unique=true)
      */

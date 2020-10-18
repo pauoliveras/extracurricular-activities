@@ -2,6 +2,7 @@
 
 namespace App\Application;
 
+use App\Application\Command\AddCandidateToWaitingListCommand;
 use App\Application\Command\AssignCandidateToActivityCommand;
 use App\Application\Command\GenerateAssignmentsCommand;
 use App\Application\Query\GetCandidatesOrderedByNumberQuery;
@@ -18,11 +19,20 @@ class GenerateAssignmentsCommandHandler
     private int $processedRequests = 0;
     private array $candidateRequests;
     private int $totalRequestCount = 0;
+    /**
+     * @var AddCandidateToWaitingListCommandHandler
+     */
+    private AddCandidateToWaitingListCommandHandler $addCandidateToWaitingList;
 
-    public function __construct(GetCandidatesOrderedByNumberQueryHandler $getOrderedCandidates, AssignCandidateToActivityCommandHandler $assignCandidateToActivity)
+    public function __construct(
+        GetCandidatesOrderedByNumberQueryHandler $getOrderedCandidates,
+        AssignCandidateToActivityCommandHandler $assignCandidateToActivity,
+        AddCandidateToWaitingListCommandHandler $addCandidateToWaitingList
+    )
     {
         $this->getOrderedCandidates = $getOrderedCandidates;
         $this->assignCandidateToActivity = $assignCandidateToActivity;
+        $this->addCandidateToWaitingList = $addCandidateToWaitingList;
     }
 
     public function __invoke(GenerateAssignmentsCommand $command)
@@ -68,6 +78,12 @@ class GenerateAssignmentsCommandHandler
 
                         continue 2;
                     } catch (ParticipantEnrollmentClosedException $exception) {
+                        $this->addCandidateToWaitingList->__invoke(
+                            new AddCandidateToWaitingListCommand(
+                                $candidate->id(),
+                                $requestedActivity->code()
+                            )
+                        );
                         continue;
                     } catch (ParticipantAlreadyAssignedToDesiredActivityCount $exception) {
                         continue 2;
