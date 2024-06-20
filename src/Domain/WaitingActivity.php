@@ -2,46 +2,24 @@
 
 namespace App\Domain;
 
-use App\Domain\ValueObject\ActivityCode;
-use App\Domain\ValueObject\Id;
-use App\Domain\ValueObject\RequestOrder;
-use Doctrine\ORM\Mapping as ORM;
-
-/**
- * @ORM\Entity()
- */
-class WaitingActivity
+class WaitingActivity implements \JsonSerializable
 {
-    /**
-     * @ORM\Column(type="identity")
-     * @ORM\Id()
-     */
-    private $id;
-    /**
-     * @ORM\Column(type="string")
-     */
     private string $activityCode;
-    /**
-     * @ORM\Column(type="integer", name="requested_order")
-     */
     private int $order;
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Domain\WaitingCandidate", fetch="EAGER")
-     */
-    private WaitingCandidate $waitingCandidate;
 
-    private function __construct(Id $id, ActivityCode $activityCode, RequestOrder $order, WaitingCandidate $waitingCandidate)
+    private function __construct(string $activityCode, int $order)
     {
-
-        $this->id = $id;
-        $this->activityCode = $activityCode->value();
-        $this->order = $order->value();
-        $this->waitingCandidate = $waitingCandidate;
+        $this->activityCode = $activityCode;
+        $this->order = $order;
     }
 
-    public static function register(Id $id, ActivityCode $activityCode, RequestOrder $order, WaitingCandidate $waitingCandidate)
+    public static function register(string $activityCode, int $order)
     {
-        return new self($id, $activityCode, $order, $waitingCandidate);
+        return new self($activityCode, $order);
     }
 
+    public function jsonSerialize()
+    {
+        return json_encode(['activityCode' => $this->activityCode, 'order' => $this->order]);
+    }
 }

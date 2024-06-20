@@ -34,7 +34,14 @@ class RequestActivitiesCommandHandler
     {
         $this->checkCandidateHasntPlacedAnyRequest($command);
 
-        $requestedActivities = RequestedActivitiesList::createFromArray($command->orderedOtions());
+        try {
+
+            $requestedActivities = RequestedActivitiesList::createFromArray($command->orderedOtions());
+        }
+        catch (InvalidArgumentException $exception) {
+            throw new InvalidArgumentException(sprintf('%s -> %s', $command->email(), $exception->getMessage()));
+        }
+
 
         $this->ensureRequestedActivitiesExist($requestedActivities);
 

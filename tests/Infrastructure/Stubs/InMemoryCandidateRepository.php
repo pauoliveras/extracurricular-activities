@@ -45,4 +45,13 @@ class InMemoryCandidateRepository implements CandidateRepository
         return $this->savedCandidates;
     }
 
+    public function countDistinctEmails(): int
+    {
+        $distinctEmails = [];
+        foreach ($this->candidates as $candidate) {
+            $distinctEmails[$candidate->email()->value()] = true;
+        }
+
+        return count($distinctEmails);
+    }
 }

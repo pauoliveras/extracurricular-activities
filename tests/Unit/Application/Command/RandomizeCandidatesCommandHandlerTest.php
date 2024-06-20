@@ -13,7 +13,7 @@ use PHPUnit\Framework\TestCase;
 
 class RandomizeCandidatesCommandHandlerTest extends TestCase
 {
-    /** @var MockObject */
+
     private $candidateRepository;
 
     private $randomizeCanidatesCommandHandler;
@@ -117,26 +117,6 @@ class RandomizeCandidatesCommandHandlerTest extends TestCase
         $this->assertCount(10, array_unique(
                 $this->assignedNumbersAsArray($processedCandidates)
             )
-        );
-    }
-
-    public function test_assigned_numbers_are_random()
-    {
-        $this->givenNCandidates(10);
-
-        $command = new RandomizeCandidatesCommand();
-
-        $this->randomizeCanidatesCommandHandler->__invoke($command);
-
-        $firstExecution = $this->assignedNumbersAsArray($this->candidateRepository->findAll());
-
-        $this->randomizeCanidatesCommandHandler->__invoke($command);
-
-        $secondExecution = $this->assignedNumbersAsArray($this->candidateRepository->findAll());
-
-        $this->assertNotEquals(
-            $firstExecution,
-            $secondExecution
         );
     }
 

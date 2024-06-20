@@ -43,4 +43,15 @@ class DoctrineCandidateRepository implements CandidateRepository
     {
         return new CandidateCollection($this->repository->findAll());
     }
+
+    public function countDistinctEmails(): int
+    {
+        $qb = $this->entityManager->getConnection()->createQueryBuilder();
+
+        $qb->select('count(DISTINCT c.email)')->from('candidate', 'c');
+
+        $result =  $qb->execute()->fetchColumn();
+
+        return $result;
+    }
 }

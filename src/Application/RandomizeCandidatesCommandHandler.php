@@ -9,6 +9,7 @@ use App\Domain\ValueObject\CandidateNumber;
 class RandomizeCandidatesCommandHandler
 {
     private $candidateRepository;
+    private array $randomizedCandidateEmails = [];
 
     public function __construct(CandidateRepository $candidateRepository)
     {
@@ -19,15 +20,23 @@ class RandomizeCandidatesCommandHandler
     {
         $candidates = $this->candidateRepository->findAll();
 
-        $numbers = range(1, $candidates->count());
+        $numbers = range(1, $this->candidateRepository->countDistinctEmails());
 
+        /** @var Candidate $candidate */
         foreach ($candidates as $candidate) {
 
-            $randomKey = array_rand($numbers);
+            $randomNumber = $this->randomizedCandidateEmails[$candidate->email()->value()] ?? null;
 
-            $candidate->assignNumber(CandidateNumber::fromInt($numbers[$randomKey]));
+            if (!$randomNumber) {
+                $randomKey = array_rand($numbers);
+                $randomNumber = $numbers[$randomKey];
+                unset($numbers[$randomKey]);
+            }
+
+            $candidate->assignNumber(CandidateNumber::fromInt($randomNumber));
             $this->candidateRepository->save($candidate);
-            unset($numbers[$randomKey]);
+
+            $this->randomizedCandidateEmails[$candidate->email()->value()] = $randomNumber;
         }
     }
 
