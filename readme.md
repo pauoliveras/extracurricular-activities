@@ -88,7 +88,7 @@ Before uploading the requests from the file, they have to be "sanitized", so the
 To do so, run the available script as follows:
 
 ```
-./translate.sh path/to/requests/file.csv
+./scripts/translate.sh path/to/requests/file.csv
 ``` 
 
 Another important thing is that the activities' codes from that file must match the codes of the available activities provided in step 1.
