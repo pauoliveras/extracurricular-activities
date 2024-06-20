@@ -29,13 +29,7 @@ class AddCandidateToWaitingListCommandHandler
             throw new InvalidArgumentException(sprintf('Activity of code %s does not exist', $command->activityCode()->value()));
         }
 
-        $waitingCandidate = $this->waitingCandidateRepository->findByCandidateId($command->candidateId());
-
-        if (!$waitingCandidate) {
-            $waitingCandidate = WaitingCandidate::register($command->candidateId(), $command->activityCode());
-        } else {
-            $waitingCandidate->addActivity($command->activityCode());
-        }
+        $waitingCandidate = WaitingCandidate::register($command->candidateId(), $command->activityCode(), $command->candidateNumber(), $command->sequenceNumber());
 
         $this->waitingCandidateRepository->save($waitingCandidate);
     }

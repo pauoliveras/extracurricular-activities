@@ -2,6 +2,7 @@
 
 namespace App\Tests\Unit\Application\Command;
 
+use App\Application\AddCandidateToWaitingListCommandHandler;
 use App\Application\AssignCandidateToActivityCommandHandler;
 use App\Application\Command\GenerateAssignmentsCommand;
 use App\Application\GenerateAssignmentsCommandHandler;
@@ -25,6 +26,7 @@ class GenerateAssignmentsCommandHandlerTest extends TestCase
     private $candidateRepository;
     private $activityRepository;
     private $participantDesiredActivityCountRepository;
+    private $addCandidateToWaitingList;
 
     public function test_a_candidate_is_assigned_to_a_requested_activity()
     {
@@ -136,10 +138,12 @@ class GenerateAssignmentsCommandHandlerTest extends TestCase
         $this->candidateRepository = new InMemoryCandidateRepository();
         $this->activityRepository = new InMemoryActivityRepository();
         $this->participantDesiredActivityCountRepository = $this->createMock(ParticipantDesiredAssignmentsRepository::class);
+        $this->addCandidateToWaitingList = $this->createMock(AddCandidateToWaitingListCommandHandler::class);
 
         $this->assignmentGenerator = new GenerateAssignmentsCommandHandler(
             new GetCandidatesOrderedByNumberQueryHandler($this->candidateRepository),
-            new AssignCandidateToActivityCommandHandler($this->activityRepository, $this->participantDesiredActivityCountRepository)
+            new AssignCandidateToActivityCommandHandler($this->activityRepository, $this->participantDesiredActivityCountRepository),
+            $this->addCandidateToWaitingList
         );
     }
 

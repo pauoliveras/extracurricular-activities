@@ -3,6 +3,7 @@
 namespace App\Tests\Unit\Application\Command;
 
 use App\Application\AddCandidateToWaitingListCommandHandler;
+use App\Application\AssignCandidateToActivityCommandHandler;
 use App\Application\Command\AddCandidateToWaitingListCommand;
 use App\Application\Command\AssignCandidateToActivityCommand;
 use App\Domain\ActivityRepository;
@@ -20,6 +21,9 @@ use App\Domain\ValueObject\StringValueObject;
 use App\Domain\WaitingCandidateRepository;
 use App\Tests\Infrastructure\Stubs\ActivityStubBuilder;
 use App\Tests\Infrastructure\Stubs\StubCandidateId;
+use App\Tests\Infrastructure\Stubs\StubCandidateNumber;
+use App\Tests\Infrastructure\Stubs\StubSequenceNumber;
+use ParticipantDesiredAssignmentsRepository;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
@@ -35,7 +39,9 @@ class AddCandidateToWaitingListCommandHandlerTest extends TestCase
 
         $command = new AddCandidateToWaitingListCommand(
             StubCandidateId::random(),
-            ActivityCode::fromString('non-existing-activity')->value()
+            ActivityCode::fromString('non-existing-activity')->value(),
+            StubCandidateNumber::random()->value(),
+            StubSequenceNumber::random()->value()
         );
         $this->expectException(InvalidArgumentException::class);
 
@@ -52,7 +58,9 @@ class AddCandidateToWaitingListCommandHandlerTest extends TestCase
 
         $command = new AddCandidateToWaitingListCommand(
             StubCandidateId::random(),
-            ActivityCode::fromString('non-existing-activity')->value()
+            ActivityCode::fromString('non-existing-activity')->value(), 
+            StubCandidateNumber::random()->value(),
+            StubSequenceNumber::random()->value()
         );
 
         $this->addCandidateRequestToWaitingListCommandHandler->__invoke($command);
@@ -92,10 +100,21 @@ class AddCandidateToWaitingListCommandHandlerTest extends TestCase
     {
         $this->activityRepository = $this->createMock(ActivityRepository::class);
         $this->waitingCandidateRepository = $this->createMock(WaitingCandidateRepository::class);
+
+        $this->waitingCandidateRepository = $this->createMock(WaitingCandidateRepository::class);
+
+        $this->participantDesiredAssignmentRepository = $this->createMock(ParticipantDesiredAssignmentsRepository::class);
+
         $this->addCandidateRequestToWaitingListCommandHandler =
             new AddCandidateToWaitingListCommandHandler(
                 $this->activityRepository,
                 $this->waitingCandidateRepository
+            );
+
+        $this->assignCandidateToActivityCommandHandler =
+            new AssignCandidateToActivityCommandHandler(
+                $this->activityRepository,
+                $this->participantDesiredAssignmentRepository
             );
     }
 

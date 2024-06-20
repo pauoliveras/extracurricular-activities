@@ -3,11 +3,10 @@
 namespace App\Domain;
 
 use App\Domain\ValueObject\ActivityCode;
+use App\Domain\ValueObject\CandidateNumber;
 use App\Domain\ValueObject\Id;
-use App\Domain\ValueObject\RequestOrder;
-use Doctrine\Common\Collections\ArrayCollection;
+use App\Domain\ValueObject\SequenceNumber;
 use Doctrine\ORM\Mapping as ORM;
-use InvalidArgumentException;
 
 /**
  * Class Candidate
@@ -22,65 +21,36 @@ class WaitingCandidate
      */
     private string $id;
     /**
-     * @ORM\OneToMany(
-     *     targetEntity="App\Domain\WaitingActivity",
-     *     mappedBy="waitingCandidate",
-     *     cascade={"persist", "remove", "merge"},
-     *     orphanRemoval=true,
-     *     fetch="EAGER"
-     * )
-     * @ORM\OrderBy({"order" = "ASC"})
-     *
+     * @ORM\Column(type="string")
+     * @ORM\Id()
      */
-    private $waitingActivities;
+    private string $activityCode;
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private int $candidateNumber;
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private int $sequenceNumber;
 
     public function __construct(
         Id $id,
-        WaitingActivityList $waitingActivityList
+        ActivityCode $activityCode,
+        CandidateNumber $candidateNumber,
+    SequenceNumber $sequenceNumber
     )
     {
+
         $this->id = $id;
-        $this->guardAgainstEmptyWaitingActivities($waitingActivityList);
-        $this->waitingActivities = new ArrayCollection();
-
-        foreach ($waitingActivityList as $requestedActivity) {
-            $this->addActivity($requestedActivity);
-        }
+        $this->activityCode = $activityCode->value();
+        $this->candidateNumber = $candidateNumber->value();
+        $this->sequenceNumber = $sequenceNumber->value();
     }
 
-    protected function guardAgainstEmptyWaitingActivities(WaitingActivityList $waitingActivityList): void
+    public static function register(Id $candidateId, ValueObject\ActivityCode $activityCode, CandidateNumber $candidateNumber, SequenceNumber $sequenceNumber)
     {
-        if ($waitingActivityList->isEmpty()) {
-            throw new InvalidArgumentException('Waiting activities must have at least one element');
-        }
+        return new self($candidateId, $activityCode, $candidateNumber, $sequenceNumber);
     }
 
-    public function addActivity(ActivityCode $activityCode)
-    {
-        $this->waitingActivities->add(
-            WaitingActivity::register(
-                Id::next(),
-                $activityCode,
-                RequestOrder::fromInt($this->waitingActivities->count() + 1),
-                $this
-            )
-        );
-    }
-
-    public static function register(Id $candidateId, ValueObject\ActivityCode $activityCode)
-    {
-        return new self($candidateId, WaitingActivityList::createFromArray([$activityCode->value()]));
-    }
-
-    public function id(): Id
-    {
-        return Id::fromString($this->id);
-    }
-
-    protected function addWaitingActivities(WaitingActivityList $waitingActivityList): void
-    {
-        foreach ($waitingActivityList as $waitingActivityCode) {
-            $this->addActivity($waitingActivityCode);
-        }
-    }
 }

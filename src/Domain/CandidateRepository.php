@@ -13,5 +13,7 @@ interface CandidateRepository
 
     public function findAll(): CandidateCollection;
 
+    public function countDistinctEmails(): int;
+
     public function nextId(): Id;
 }

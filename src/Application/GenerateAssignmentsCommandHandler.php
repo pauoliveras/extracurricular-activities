@@ -81,9 +81,12 @@ class GenerateAssignmentsCommandHandler
                         $this->addCandidateToWaitingList->__invoke(
                             new AddCandidateToWaitingListCommand(
                                 $candidate->id(),
-                                $requestedActivity->code()
+                                $requestedActivity->code(),
+                                $candidate->number()->value(),
+                                $sequenceNumber->value()
                             )
                         );
+
                         continue;
                     } catch (ParticipantAlreadyAssignedToDesiredActivityCount $exception) {
                         continue 2;
