@@ -48,7 +48,7 @@ class GetCandidatesOrderedByNumberQueryHandler
         $arrayIterator = $candidates->getIterator();
         $arrayIterator->uasort(
             function (Candidate $first, Candidate $second) {
-                return $first->number()->value() >= $second->number()->value();
+                return $first->number()->value() <=> $second->number()->value();
             }
         );
 
